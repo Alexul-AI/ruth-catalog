@@ -38,6 +38,33 @@
   z-index: 1;
 }
 
+.favoriteBtn {
+  position: absolute;
+  top: 0.35rem;
+  left: 0.35rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  transition: color 0.12s, transform 0.12s;
+}
+
+.favoriteBtn:hover {
+  transform: scale(1.1);
+}
+
+.favoriteBtnActive {
+  color: #D97706;
+}
+
 .body {
   padding: 0.7rem 0.85rem;
   flex: 1;

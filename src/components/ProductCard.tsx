@@ -9,9 +9,18 @@ interface ProductCardProps {
   onAdd: (product: Product, qty: number) => void
   preferredFlavor?: string
   preferSpecial?: boolean
+  isFavorite: boolean
+  onToggleFavorite: () => void
 }
 
-export default function ProductCard({ group, onAdd, preferredFlavor, preferSpecial }: ProductCardProps) {
+export default function ProductCard({
+  group,
+  onAdd,
+  preferredFlavor,
+  preferSpecial,
+  isFavorite,
+  onToggleFavorite,
+}: ProductCardProps) {
   const defaultIndex = getDefaultVariantIndex(group, { preferredFlavor, preferSpecial })
   const [selectedIndex, setSelectedIndex] = useState(defaultIndex)
   const [qty, setQty] = useState(1)
@@ -39,6 +48,16 @@ export default function ProductCard({ group, onAdd, preferredFlavor, preferSpeci
       {product.isSpecialOrder && (
         <div className={styles.specialBadge}>★ הזמנה מיוחדת</div>
       )}
+
+      <button
+        type="button"
+        className={`${styles.favoriteBtn} ${isFavorite ? styles.favoriteBtnActive : ''}`}
+        onClick={onToggleFavorite}
+        aria-pressed={isFavorite}
+        aria-label={isFavorite ? 'הסר ממועדפים' : 'הוסף למועדפים'}
+      >
+        {isFavorite ? '★' : '☆'}
+      </button>
 
       <div className={styles.image}>
         <span role="img" aria-label={group.category}>

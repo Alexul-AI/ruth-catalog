@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { products } from './data/products'
 import { useCart } from './hooks/useCart'
+import { useFavorites } from './hooks/useFavorites'
 import { groupProducts } from './utils/groupProducts'
 import type { FiltersState } from './types'
 
@@ -17,6 +18,7 @@ const DEFAULT_FILTERS: FiltersState = {
   category: 'הכל',
   flavor: 'הכל',
   onlySpecial: false,
+  onlyFavorites: false,
 }
 
 const PRODUCT_GROUPS = groupProducts(products)
@@ -26,12 +28,14 @@ export default function App() {
   const [cartOpen, setCartOpen] = useState(false)
 
   const { cart, addItem, removeItem, updateQty, restoreCart, clearCart, totalItems } = useCart()
+  const { favorites, toggleFavorite } = useFavorites()
 
   // Derived: filtered product groups
   const filteredGroups = useMemo(() => {
     const q = filters.search.toLowerCase().trim()
     return PRODUCT_GROUPS.filter(group => {
       if (filters.category !== 'הכל' && group.category !== filters.category) return false
+      if (filters.onlyFavorites && !favorites.has(group.groupKey)) return false
 
       // A group passes the flavor/special filters if at least one of its
       // flavor variants satisfies them — the card itself still offers all
@@ -56,7 +60,7 @@ export default function App() {
 
       return true
     })
-  }, [filters])
+  }, [filters, favorites])
 
   function scrollToCatalog() {
     document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth' })
@@ -72,7 +76,7 @@ export default function App() {
         <section className={styles.catalogSection} id="catalog">
           <h2 className={styles.sectionTitle}>קטלוג מוצרים</h2>
 
-          <Filters filters={filters} onChange={setFilters} />
+          <Filters filters={filters} onChange={setFilters} favoritesCount={favorites.size} />
 
           <p className={styles.resultCount}>{filteredGroups.length} מוצרים</p>
 
@@ -89,6 +93,8 @@ export default function App() {
                   onAdd={addItem}
                   preferredFlavor={filters.flavor !== 'הכל' ? filters.flavor : undefined}
                   preferSpecial={filters.onlySpecial}
+                  isFavorite={favorites.has(group.groupKey)}
+                  onToggleFavorite={() => toggleFavorite(group.groupKey)}
                 />
               ))}
             </div>

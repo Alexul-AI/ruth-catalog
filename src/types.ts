@@ -30,6 +30,7 @@ export interface FiltersState {
   category: string
   flavor: string
   onlySpecial: boolean
+  onlyFavorites: boolean
 }
 
 /**

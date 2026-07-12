@@ -20,6 +20,7 @@ Customers browse products, build a cart, and send a structured Hebrew order via 
 | `src/hooks/useCart.ts` | All cart logic (add / remove / update qty), persisted to localStorage |
 | `src/hooks/useOrderDetails.ts` | Customer-details form state — remembers name/business/phone/address between visits (not deliveryDate/notes, those are per-order) |
 | `src/utils/lastOrder.ts` | Snapshot of the last sent cart, used by the "🔁 order again" button when the cart is empty |
+| `src/hooks/useFavorites.ts` | Persisted set of favorited `ProductGroup.groupKey`s — the "⭐ my regulars" filter in `Filters.tsx` only renders once at least one favorite exists |
 | `src/types.ts` | Shared TypeScript types (`Product`, `CartItem`, `OrderDetails`, `FiltersState`, `ProductGroup`) |
 | `src/index.css` | Global CSS variables (design tokens) — colors, radii, font |
 
