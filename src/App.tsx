@@ -25,7 +25,7 @@ export default function App() {
   const [filters, setFilters] = useState<FiltersState>(DEFAULT_FILTERS)
   const [cartOpen, setCartOpen] = useState(false)
 
-  const { cart, addItem, removeItem, updateQty, totalItems } = useCart()
+  const { cart, addItem, removeItem, updateQty, restoreCart, clearCart, totalItems } = useCart()
 
   // Derived: filtered product groups
   const filteredGroups = useMemo(() => {
@@ -102,6 +102,8 @@ export default function App() {
           onClose={() => setCartOpen(false)}
           onUpdateQty={updateQty}
           onRemove={removeItem}
+          onRestoreLastOrder={restoreCart}
+          onOrderSent={clearCart}
         />
       )}
     </>

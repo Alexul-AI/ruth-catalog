@@ -18,7 +18,9 @@ Customers browse products, build a cart, and send a structured Hebrew order via 
 | `src/data/products.ts` | All 93 products from the PDF catalog — source of truth |
 | `src/utils/whatsapp.ts` | WhatsApp number + message builder — number is already set to the real business number |
 | `src/hooks/useCart.ts` | All cart logic (add / remove / update qty), persisted to localStorage |
-| `src/types.ts` | Shared TypeScript types (`Product`, `CartItem`, `OrderDetails`, `FiltersState`) |
+| `src/hooks/useOrderDetails.ts` | Customer-details form state — remembers name/business/phone/address between visits (not deliveryDate/notes, those are per-order) |
+| `src/utils/lastOrder.ts` | Snapshot of the last sent cart, used by the "🔁 order again" button when the cart is empty |
+| `src/types.ts` | Shared TypeScript types (`Product`, `CartItem`, `OrderDetails`, `FiltersState`, `ProductGroup`) |
 | `src/index.css` | Global CSS variables (design tokens) — colors, radii, font |
 
 Project is TypeScript (converted 2026-07-12). All source files are `.ts`/`.tsx`; run `npm run typecheck` before committing.
@@ -69,6 +71,21 @@ different products.
 Default flavor selected in the picker: whichever flavor matches an active
 flavor/special-order filter, else the first non-special-order flavor (so a
 customer isn't defaulted into a variant that requires a special order).
+
+## Repeat-customer flow
+
+`CartPanel.tsx` has a third step, `'sent'`, shown right after "שליחת הזמנה
+ב-WhatsApp" is clicked. At that point the cart is cleared (`onOrderSent` →
+`clearCart`) and the cart snapshot is saved via `saveLastOrder` — this is
+what makes the empty-cart state able to show "🔁 הזמינו שוב את ההזמנה
+הקודמת". If you ever need the cart to *not* clear after sending (e.g. to
+let someone send the same order to two people), that's an intentional
+behavior change, not a bug — flag it before "fixing" it back.
+
+Customer name/business/phone/address persist across visits via
+`useOrderDetails` (separate from the cart snapshot above) so a repeat
+customer never retypes their contact info, even if they don't use "order
+again."
 
 ## WhatsApp message format
 The final message sent is structured Hebrew text:

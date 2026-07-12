@@ -1,45 +1,44 @@
 import { useState } from 'react'
 import { buildWhatsAppUrl, sendWhatsAppOrder } from '../utils/whatsapp'
-import type { CartItem, OrderDetails } from '../types'
+import { loadLastOrder, saveLastOrder } from '../utils/lastOrder'
+import { useOrderDetails } from '../hooks/useOrderDetails'
+import type { CartItem } from '../types'
 import styles from './CartPanel.module.css'
 
-const EMPTY_DETAILS: OrderDetails = {
-  customerName: '',
-  businessName: '',
-  phone: '',
-  address: '',
-  deliveryDate: '',
-  notes: '',
-  contactBeforeConfirm: false,
-}
-
-type Step = 'list' | 'form'
+type Step = 'list' | 'form' | 'sent'
 
 interface CartPanelProps {
   cart: CartItem[]
   onClose: () => void
   onUpdateQty: (id: string, qty: number) => void
   onRemove: (id: string) => void
+  onRestoreLastOrder: (items: CartItem[]) => void
+  onOrderSent: () => void
 }
 
-export default function CartPanel({ cart, onClose, onUpdateQty, onRemove }: CartPanelProps) {
+export default function CartPanel({ cart, onClose, onUpdateQty, onRemove, onRestoreLastOrder, onOrderSent }: CartPanelProps) {
   const [step, setStep] = useState<Step>('list')
-  const [details, setDetails] = useState<OrderDetails>(EMPTY_DETAILS)
+  const { details, set } = useOrderDetails()
   const [fallbackUrl, setFallbackUrl] = useState<string | null>(null)
+  const [lastOrder] = useState(loadLastOrder)
 
   const totalItems = cart.reduce((s, i) => s + i.qty, 0)
   const formValid = details.customerName.trim() !== '' && details.phone.trim() !== '' && cart.length > 0
+  const hasSpecialOrderItem = cart.some(i => i.isSpecialOrder)
 
-  function set<K extends keyof OrderDetails>(key: K, value: OrderDetails[K]) {
-    setDetails(prev => ({ ...prev, [key]: value }))
+  function handleFieldChange<K extends keyof typeof details>(key: K, value: (typeof details)[K]) {
+    set(key, value)
     setFallbackUrl(null)
   }
 
   function handleSend() {
     const opened = sendWhatsAppOrder(cart, details)
+    saveLastOrder(cart)
     if (!opened) {
       setFallbackUrl(buildWhatsAppUrl(cart, details))
     }
+    onOrderSent()
+    setStep('sent')
   }
 
   return (
@@ -48,9 +47,41 @@ export default function CartPanel({ cart, onClose, onUpdateQty, onRemove }: Cart
 
         {/* Header */}
         <div className={styles.header}>
-          <h2>{step === 'list' ? '🛒 סיכום הזמנה' : '📋 פרטי לקוח'}</h2>
+          <h2>
+            {step === 'list' && '🛒 סיכום הזמנה'}
+            {step === 'form' && '📋 פרטי לקוח'}
+            {step === 'sent' && '✅ ההזמנה נשלחה'}
+          </h2>
           <button className={styles.closeBtn} onClick={onClose} aria-label="סגור">✕</button>
         </div>
+
+        {/* ── Step: Sent confirmation ── */}
+        {step === 'sent' && (
+          <div className={styles.empty}>
+            <div className={styles.emptyIcon}>✅</div>
+            <p className={styles.emptyTitle}>ההזמנה נשלחה!</p>
+            <p className={styles.emptySub}>
+              {fallbackUrl
+                ? 'אם WhatsApp לא נפתח אוטומטית אצלכם, לחצו על הקישור למטה כדי לפתוח ולשלוח את ההודעה.'
+                : 'חלון WhatsApp נפתח עם פרטי ההזמנה — נשאר רק לאשר ולשלוח שם.'}
+            </p>
+            <div className={styles.sentActions}>
+              {fallbackUrl && (
+                <a
+                  className={`${styles.repeatBtn} ${styles.fallbackLink}`}
+                  href={fallbackUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  פתיחת WhatsApp
+                </a>
+              )}
+              <button className={styles.nextBtn} onClick={onClose}>
+                סגירה
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* ── Step: Cart list ── */}
         {step === 'list' && (
@@ -61,6 +92,14 @@ export default function CartPanel({ cart, onClose, onUpdateQty, onRemove }: Cart
                   <div className={styles.emptyIcon}>🛒</div>
                   <p className={styles.emptyTitle}>ההזמנה ריקה</p>
                   <p className={styles.emptySub}>הוסיפו מוצרים מהקטלוג</p>
+                  {lastOrder && lastOrder.length > 0 && (
+                    <button
+                      className={styles.repeatBtn}
+                      onClick={() => onRestoreLastOrder(lastOrder)}
+                    >
+                      🔁 הזמינו שוב את ההזמנה הקודמת ({lastOrder.length} פריטים)
+                    </button>
+                  )}
                 </div>
               ) : (
                 cart.map(item => (
@@ -130,7 +169,7 @@ export default function CartPanel({ cart, onClose, onUpdateQty, onRemove }: Cart
                   <input
                     placeholder="ישראל ישראלי"
                     value={details.customerName}
-                    onChange={e => set('customerName', e.target.value)}
+                    onChange={e => handleFieldChange('customerName', e.target.value)}
                   />
                 </label>
 
@@ -139,7 +178,7 @@ export default function CartPanel({ cart, onClose, onUpdateQty, onRemove }: Cart
                   <input
                     placeholder="בית קפה X"
                     value={details.businessName}
-                    onChange={e => set('businessName', e.target.value)}
+                    onChange={e => handleFieldChange('businessName', e.target.value)}
                   />
                 </label>
 
@@ -149,7 +188,7 @@ export default function CartPanel({ cart, onClose, onUpdateQty, onRemove }: Cart
                     type="tel"
                     placeholder="050-0000000"
                     value={details.phone}
-                    onChange={e => set('phone', e.target.value)}
+                    onChange={e => handleFieldChange('phone', e.target.value)}
                   />
                 </label>
 
@@ -158,7 +197,7 @@ export default function CartPanel({ cart, onClose, onUpdateQty, onRemove }: Cart
                   <input
                     type="date"
                     value={details.deliveryDate}
-                    onChange={e => set('deliveryDate', e.target.value)}
+                    onChange={e => handleFieldChange('deliveryDate', e.target.value)}
                   />
                 </label>
 
@@ -167,9 +206,16 @@ export default function CartPanel({ cart, onClose, onUpdateQty, onRemove }: Cart
                   <input
                     placeholder="רחוב, עיר"
                     value={details.address}
-                    onChange={e => set('address', e.target.value)}
+                    onChange={e => handleFieldChange('address', e.target.value)}
                   />
                 </label>
+
+                {hasSpecialOrderItem && (
+                  <p className={`${styles.specialNote} ${styles.fullWidth}`}>
+                    ⚠ ההזמנה כוללת מוצר/ים "הזמנה מיוחדת" — אלה עשויים לדרוש זמן הכנה נוסף.
+                    מומלץ לוודא זמינות לתאריך המבוקש מול העסק.
+                  </p>
+                )}
 
                 <label className={`${styles.field} ${styles.fullWidth}`}>
                   <span>הערות</span>
@@ -177,7 +223,7 @@ export default function CartPanel({ cart, onClose, onUpdateQty, onRemove }: Cart
                     rows={3}
                     placeholder="הערות נוספות להזמנה..."
                     value={details.notes}
-                    onChange={e => set('notes', e.target.value)}
+                    onChange={e => handleFieldChange('notes', e.target.value)}
                   />
                 </label>
 
@@ -185,7 +231,7 @@ export default function CartPanel({ cart, onClose, onUpdateQty, onRemove }: Cart
                   <input
                     type="checkbox"
                     checked={details.contactBeforeConfirm}
-                    onChange={e => set('contactBeforeConfirm', e.target.checked)}
+                    onChange={e => handleFieldChange('contactBeforeConfirm', e.target.checked)}
                   />
                   נא לחזור אליי לפני אישור ההזמנה
                 </label>

@@ -53,8 +53,13 @@ export function useCart() {
     setCart([])
   }
 
+  /** Replace the whole cart at once (used by "repeat last order") */
+  function restoreCart(items: CartItem[]) {
+    setCart(items)
+  }
+
   const totalItems = cart.reduce((sum, i) => sum + i.qty, 0)
   const totalLines = cart.length
 
-  return { cart, addItem, removeItem, updateQty, clearCart, totalItems, totalLines }
+  return { cart, addItem, removeItem, updateQty, clearCart, restoreCart, totalItems, totalLines }
 }
