@@ -1,0 +1,109 @@
+.wrap {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.search {
+  width: 100%;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.55rem 0.85rem;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.search:focus {
+  border-color: var(--red);
+}
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.label {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 600;
+  padding-top: 0.3rem;
+  white-space: nowrap;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.chip {
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  padding: 0.2rem 0.65rem;
+  font-size: 12px;
+  background: var(--white);
+  color: var(--text);
+  transition: all 0.12s;
+}
+
+.chip:hover {
+  border-color: var(--red-mid);
+}
+
+.chip.active {
+  background: var(--red);
+  color: var(--white);
+  border-color: var(--red);
+}
+
+.specialToggle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.specialToggle input {
+  accent-color: var(--red);
+  width: 15px;
+  height: 15px;
+}
+
+.catTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.catTab {
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  padding: 0.25rem 0.7rem;
+  font-size: 12px;
+  background: var(--white);
+  color: var(--text);
+  transition: all 0.12s;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.catTab:hover {
+  border-color: var(--red-mid);
+}
+
+.catTab.active {
+  background: var(--red);
+  color: var(--white);
+  border-color: var(--red);
+}

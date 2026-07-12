@@ -1,0 +1,54 @@
+/* ── Design Tokens ── */
+:root {
+  --red:        #B91C1C;
+  --red-hover:  #991B1B;
+  --red-dark:   #7F1D1D;
+  --red-light:  #FEF2F2;
+  --red-mid:    #FCA5A5;
+  --cream:      #FAFAF9;
+  --border:     #E5E7EB;
+  --text:       #1F2937;
+  --muted:      #6B7280;
+  --white:      #ffffff;
+  --green-wa:   #25D366;
+  --green-wa-h: #1DAE57;
+  --radius-sm:  8px;
+  --radius-md:  12px;
+  --radius-lg:  16px;
+}
+
+/* ── Reset ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Heebo', sans-serif;
+  direction: rtl;
+  background: var(--cream);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font-family: 'Heebo', sans-serif;
+  cursor: pointer;
+}
+
+input, textarea, select {
+  font-family: 'Heebo', sans-serif;
+  direction: rtl;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
