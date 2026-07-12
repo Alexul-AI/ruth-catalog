@@ -46,6 +46,30 @@ Project is TypeScript (converted 2026-07-12). All source files are `.ts`/`.tsx`;
 }
 ```
 
+## Product grouping (flavor variants)
+
+Many catalog items are the same physical product offered in choc/salty/sweet
+flavors as separate rows in `products.ts` (e.g. `t-001`/`t-002`/`t-003` are
+all "טארטלט מיני", just different flavor + sku). Showing those as 3 near-
+identical cards was bad mobile UX (more scrolling, harder to compare), so
+`src/utils/groupProducts.ts` merges them into one `ProductGroup` per
+distinct `category+name+size+packageQty`, rendered as a single card with a
+flavor-chip picker (`ProductCard.tsx`) instead of one card per flavor. This
+took the catalog from 93 cards to 72.
+
+**This grouping is deliberately conservative** — it only merges rows whose
+`name` string is byte-identical. Some families encode the flavor *inside*
+the name (e.g. `g-001`..`g-006` "קרמו שוקולד לבן – ציפוי תות/פיסטוק/..." or
+`mc-001`..`mc-009` macaron flavors) and won't group with this rule; grouping
+those would need a manual mapping, not automatic key-matching — don't
+"fix" this by loosening the key match, it was tried and rejected because a
+looser match (e.g. by size+packageQty alone) risks merging genuinely
+different products.
+
+Default flavor selected in the picker: whichever flavor matches an active
+flavor/special-order filter, else the first non-special-order flavor (so a
+customer isn't defaulted into a variant that requires a special order).
+
 ## WhatsApp message format
 The final message sent is structured Hebrew text:
 ```

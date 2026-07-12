@@ -31,3 +31,20 @@ export interface FiltersState {
   flavor: string
   onlySpecial: boolean
 }
+
+/**
+ * A group of products that are really the same physical item offered in
+ * different flavors (identical category/name/size/packageQty, only
+ * flavor + sku + isSpecialOrder differ). Rendered as one catalog card
+ * with a flavor picker instead of one card per flavor.
+ */
+export interface ProductGroup {
+  groupKey: string
+  category: string
+  name: string
+  size: string
+  packageQty: string
+  catalogNumber: string
+  storageTemp?: string
+  variants: Product[]
+}

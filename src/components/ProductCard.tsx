@@ -1,19 +1,31 @@
 import { useEffect, useRef, useState } from 'react'
 import { CATEGORY_EMOJI } from '../data/products'
-import type { Product } from '../types'
+import { getDefaultVariantIndex } from '../utils/groupProducts'
+import type { Product, ProductGroup } from '../types'
 import styles from './ProductCard.module.css'
 
 interface ProductCardProps {
-  product: Product
+  group: ProductGroup
   onAdd: (product: Product, qty: number) => void
+  preferredFlavor?: string
+  preferSpecial?: boolean
 }
 
-export default function ProductCard({ product, onAdd }: ProductCardProps) {
+export default function ProductCard({ group, onAdd, preferredFlavor, preferSpecial }: ProductCardProps) {
+  const defaultIndex = getDefaultVariantIndex(group, { preferredFlavor, preferSpecial })
+  const [selectedIndex, setSelectedIndex] = useState(defaultIndex)
   const [qty, setQty] = useState(1)
   const [added, setAdded] = useState(false)
   const addedTimeout = useRef<ReturnType<typeof setTimeout>>()
 
+  // Keep the selection in sync when filters change which variant should lead,
+  // without discarding a manual choice the customer already made for this render.
+  useEffect(() => setSelectedIndex(defaultIndex), [defaultIndex])
+
   useEffect(() => () => clearTimeout(addedTimeout.current), [])
+
+  const product = group.variants[selectedIndex]
+  const hasMultipleFlavors = group.variants.length > 1
 
   function handleAdd() {
     onAdd(product, qty)
@@ -29,19 +41,38 @@ export default function ProductCard({ product, onAdd }: ProductCardProps) {
       )}
 
       <div className={styles.image}>
-        <span role="img" aria-label={product.category}>
-          {CATEGORY_EMOJI[product.category] ?? '🍰'}
+        <span role="img" aria-label={group.category}>
+          {CATEGORY_EMOJI[group.category] ?? '🍰'}
         </span>
       </div>
 
       <div className={styles.body}>
-        <div className={styles.category}>{product.category}</div>
-        <h2 className={styles.name}>{product.name}</h2>
+        <div className={styles.category}>{group.category}</div>
+        <h2 className={styles.name}>{group.name}</h2>
+
+        {hasMultipleFlavors ? (
+          <div className={styles.flavorRow} role="group" aria-label="בחירת טעם">
+            {group.variants.map((v, i) => (
+              <button
+                key={v.id}
+                type="button"
+                className={`${styles.flavorChip} ${i === selectedIndex ? styles.flavorChipActive : ''}`}
+                aria-pressed={i === selectedIndex}
+                onClick={() => setSelectedIndex(i)}
+              >
+                {v.flavor}
+              </button>
+            ))}
+          </div>
+        ) : (
+          product.flavor && (
+            <div className={styles.tags}>
+              <span className={`${styles.tag} ${styles.flavor}`}>{product.flavor}</span>
+            </div>
+          )
+        )}
 
         <div className={styles.tags}>
-          {product.flavor && (
-            <span className={`${styles.tag} ${styles.flavor}`}>{product.flavor}</span>
-          )}
           {product.size && product.size !== '—' && (
             <span className={styles.tag}>{product.size}</span>
           )}
