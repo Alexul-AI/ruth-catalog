@@ -1,6 +1,10 @@
 import styles from './HeroSection.module.css'
 
-export default function HeroSection({ onStart }) {
+interface HeroSectionProps {
+  onStart: () => void
+}
+
+export default function HeroSection({ onStart }: HeroSectionProps) {
   return (
     <section className={styles.hero}>
       <div className={styles.badge}>B2B · קפה · מסעדות · קייטרינג</div>

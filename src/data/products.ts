@@ -1,19 +1,8 @@
 /**
  * Product catalog — Ruth Patiforim
  * Source: printed PDF catalog (pages 01–13)
- *
- * Field reference:
- *   id            — unique internal ID
- *   category      — display category (Hebrew)
- *   name          — product name (Hebrew)
- *   catalogNumber — מספר קטלוגי (string, may be "—")
- *   sku           — מק"ט (string)
- *   flavor        — טעם
- *   size          — גודל / מידות
- *   packageQty    — כמות באריזה
- *   isSpecialOrder — מוצר בהזמנה מיוחדת
- *   storageTemp   — טמפרטורת אחסון (optional)
  */
+import type { Product } from '../types'
 
 export const CATEGORIES = [
   'טארטלטים מיני',
@@ -31,7 +20,7 @@ export const CATEGORIES = [
   'כוסות קינוחים',
 ]
 
-export const CATEGORY_EMOJI = {
+export const CATEGORY_EMOJI: Record<string, string> = {
   'טארטלטים מיני':         '🫙',
   'טארטלטים אישיים':       '🥧',
   'טארטלטים פרימיום':      '✨',
@@ -47,19 +36,7 @@ export const CATEGORY_EMOJI = {
   'כוסות קינוחים':         '🥂',
 }
 
-/** @type {Array<{
- *   id: string,
- *   category: string,
- *   name: string,
- *   catalogNumber: string,
- *   sku: string,
- *   flavor: string,
- *   size: string,
- *   packageQty: string,
- *   isSpecialOrder: boolean,
- *   storageTemp?: string
- * }>} */
-export const products = [
+export const products: Product[] = [
   // ── טארטלטים מיני ──────────────────────────────────────────────────
   { id: 't-001', category: 'טארטלטים מיני', name: 'טארטלט מיני',         catalogNumber: '1',  sku: '001',   flavor: 'שוקו',   size: '70×30 מ"מ', packageQty: '240 י"ח', isSpecialOrder: true  },
   { id: 't-002', category: 'טארטלטים מיני', name: 'טארטלט מיני',         catalogNumber: '1',  sku: '01',    flavor: 'מלוח',   size: '70×30 מ"מ', packageQty: '240 י"ח', isSpecialOrder: true  },
@@ -172,10 +149,10 @@ export const products = [
   { id: 'f-009', category: 'קינוחים מוגמרים', name: 'כדורי שוקולד בציפוי סוכריות',    catalogNumber: '—', sku: '6622',  flavor: 'סוכריות',   size: '—',         packageQty: '300 י"ח',         isSpecialOrder: false },
 
   // ── כוסות קינוחים ────────────────────────────────────────────────────
-  { id: 'g-001', category: 'כוסות קינוחים', name: 'קרמו שוקולד לבן – ציפוי תות',       catalogNumber: '—', sku: '1122', flavor: 'תות',       size: '9×9 יח\'/מגש', packageQty: '81 י"ח', isSpecialOrder: false },
-  { id: 'g-002', category: 'כוסות קינוחים', name: 'קרמו שוקולד לבן – ציפוי פיסטוק',    catalogNumber: '—', sku: '1133', flavor: 'פיסטוק',    size: '9×9 יח\'/מגש', packageQty: '81 י"ח', isSpecialOrder: false },
-  { id: 'g-003', category: 'כוסות קינוחים', name: 'קרמו שוקולד לבן – ציפוי קרמל',      catalogNumber: '—', sku: '1144', flavor: 'קרמל',      size: '9×9 יח\'/מגש', packageQty: '81 י"ח', isSpecialOrder: false },
-  { id: 'g-004', category: 'כוסות קינוחים', name: 'קרמו שוקולד לבן – ציפוי פירות יער', catalogNumber: '—', sku: '1155', flavor: 'פירות יער', size: '9×9 יח\'/מגש', packageQty: '81 י"ח', isSpecialOrder: false },
-  { id: 'g-005', category: 'כוסות קינוחים', name: 'קרמו שוקולד לבן – ציפוי שוקולד',    catalogNumber: '—', sku: '1177', flavor: 'שוקולד',    size: '9×9 יח\'/מגש', packageQty: '81 י"ח', isSpecialOrder: false },
-  { id: 'g-006', category: 'כוסות קינוחים', name: 'קרמו שוקולד לבן – ציפוי פסיפלורה',  catalogNumber: '—', sku: '1188', flavor: 'פסיפלורה',  size: '9×9 יח\'/מגש', packageQty: '81 י"ח', isSpecialOrder: false },
+  { id: 'g-001', category: 'כוסות קינוחים', name: 'קרמו שוקולד לבן – ציפוי תות',       catalogNumber: '—', sku: '1122', flavor: 'תות',       size: '9×9 יח\'/מגש', packageQty: '81 י"ח', isSpecialOrder: false, groupBaseName: 'קרמו שוקולד לבן' },
+  { id: 'g-002', category: 'כוסות קינוחים', name: 'קרמו שוקולד לבן – ציפוי פיסטוק',    catalogNumber: '—', sku: '1133', flavor: 'פיסטוק',    size: '9×9 יח\'/מגש', packageQty: '81 י"ח', isSpecialOrder: false, groupBaseName: 'קרמו שוקולד לבן' },
+  { id: 'g-003', category: 'כוסות קינוחים', name: 'קרמו שוקולד לבן – ציפוי קרמל',      catalogNumber: '—', sku: '1144', flavor: 'קרמל',      size: '9×9 יח\'/מגש', packageQty: '81 י"ח', isSpecialOrder: false, groupBaseName: 'קרמו שוקולד לבן' },
+  { id: 'g-004', category: 'כוסות קינוחים', name: 'קרמו שוקולד לבן – ציפוי פירות יער', catalogNumber: '—', sku: '1155', flavor: 'פירות יער', size: '9×9 יח\'/מגש', packageQty: '81 י"ח', isSpecialOrder: false, groupBaseName: 'קרמו שוקולד לבן' },
+  { id: 'g-005', category: 'כוסות קינוחים', name: 'קרמו שוקולד לבן – ציפוי שוקולד',    catalogNumber: '—', sku: '1177', flavor: 'שוקולד',    size: '9×9 יח\'/מגש', packageQty: '81 י"ח', isSpecialOrder: false, groupBaseName: 'קרמו שוקולד לבן' },
+  { id: 'g-006', category: 'כוסות קינוחים', name: 'קרמו שוקולד לבן – ציפוי פסיפלורה',  catalogNumber: '—', sku: '1188', flavor: 'פסיפלורה',  size: '9×9 יח\'/מגש', packageQty: '81 י"ח', isSpecialOrder: false, groupBaseName: 'קרמו שוקולד לבן' },
 ]

@@ -1,12 +1,19 @@
 import { CATEGORIES, CATEGORY_EMOJI } from '../data/products'
+import type { FiltersState } from '../types'
 import styles from './Filters.module.css'
 
 const FLAVORS = ['הכל', 'מתוק', 'מלוח', 'שוקו', 'ניטרלי', 'לבן פרווה / מריר', 'פיסטוק', 'פירות יער', 'וניל', 'פטל', 'תות', 'קפה', 'קרמל מלוח', 'פסיפלורה']
 
-export default function Filters({ filters, onChange }) {
-  const { search, category, flavor, onlySpecial } = filters
+interface FiltersProps {
+  filters: FiltersState
+  onChange: (filters: FiltersState) => void
+  favoritesCount: number
+}
 
-  function set(key, value) {
+export default function Filters({ filters, onChange, favoritesCount }: FiltersProps) {
+  const { search, category, flavor, onlySpecial, onlyFavorites } = filters
+
+  function set<K extends keyof FiltersState>(key: K, value: FiltersState[K]) {
     onChange({ ...filters, [key]: value })
   }
 
@@ -38,15 +45,28 @@ export default function Filters({ filters, onChange }) {
         </div>
       </div>
 
-      {/* Special order toggle */}
-      <label className={styles.specialToggle}>
-        <input
-          type="checkbox"
-          checked={onlySpecial}
-          onChange={e => set('onlySpecial', e.target.checked)}
-        />
-        הזמנה מיוחדת בלבד
-      </label>
+      {/* Special order / favorites toggles */}
+      <div className={styles.toggleRow}>
+        <label className={styles.specialToggle}>
+          <input
+            type="checkbox"
+            checked={onlySpecial}
+            onChange={e => set('onlySpecial', e.target.checked)}
+          />
+          הזמנה מיוחדת בלבד
+        </label>
+
+        {favoritesCount > 0 && (
+          <label className={styles.specialToggle}>
+            <input
+              type="checkbox"
+              checked={onlyFavorites}
+              onChange={e => set('onlyFavorites', e.target.checked)}
+            />
+            ⭐ המועדפים שלי בלבד ({favoritesCount})
+          </label>
+        )}
+      </div>
 
       {/* Category tabs */}
       <div className={styles.catTabs}>
