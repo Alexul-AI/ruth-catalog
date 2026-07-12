@@ -56,18 +56,28 @@ flavors as separate rows in `products.ts` (e.g. `t-001`/`t-002`/`t-003` are
 all "טארטלט מיני", just different flavor + sku). Showing those as 3 near-
 identical cards was bad mobile UX (more scrolling, harder to compare), so
 `src/utils/groupProducts.ts` merges them into one `ProductGroup` per
-distinct `category+name+size+packageQty`, rendered as a single card with a
-flavor-chip picker (`ProductCard.tsx`) instead of one card per flavor. This
-took the catalog from 93 cards to 72.
+distinct `category+(groupBaseName ?? name)+size+packageQty`, rendered as a
+single card with a flavor-chip picker (`ProductCard.tsx`) instead of one
+card per flavor. This took the catalog from 93 cards to 72, then to 67
+once `g-001`..`g-006` (the "קרמו שוקולד לבן – ציפוי X" cups) were opted in
+via `groupBaseName` (below).
 
-**This grouping is deliberately conservative** — it only merges rows whose
-`name` string is byte-identical. Some families encode the flavor *inside*
-the name (e.g. `g-001`..`g-006` "קרמו שוקולד לבן – ציפוי תות/פיסטוק/..." or
-`mc-001`..`mc-009` macaron flavors) and won't group with this rule; grouping
-those would need a manual mapping, not automatic key-matching — don't
-"fix" this by loosening the key match, it was tried and rejected because a
-looser match (e.g. by size+packageQty alone) risks merging genuinely
-different products.
+**Automatic grouping (by `name` alone) is deliberately conservative** — it
+only merges rows whose `name` string is byte-identical, so it never
+accidentally merges genuinely different products. Families that encode
+the flavor *inside* the name (e.g. `g-001`..`g-006`, or `mc-001`..`mc-009`
+macaron flavors) don't group automatically. `g-001`..`g-006` were opted in
+by setting `groupBaseName: 'קרמו שוקולד לבן'` on each — `groupProducts.ts`
+uses that as the group's key/display name instead of `name`, while each
+variant's own full `name` (e.g. "...– ציפוי פיסטוק") is still what shows
+up in the cart line and WhatsApp message. `mc-001`..`mc-009` were
+deliberately left ungrouped — macaron flavor feels like the primary
+purchase decision there, not an interchangeable topping, so collapsing
+them into one card was judged more likely to hide options than help; this
+is a judgment call, not a technical limitation, and can be revisited.
+Don't "fix" grouping gaps by loosening the automatic name match itself
+(e.g. to size+packageQty alone) — that risks merging genuinely different
+products; use `groupBaseName` per-product instead.
 
 Default flavor selected in the picker: whichever flavor matches an active
 flavor/special-order filter, else the first non-special-order flavor (so a

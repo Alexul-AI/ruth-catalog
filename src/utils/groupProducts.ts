@@ -5,18 +5,21 @@ import type { Product, ProductGroup } from '../types'
  * into a single ProductGroup, so the catalog doesn't show 3 near-identical
  * cards for one tartlet in choc/salty/sweet.
  *
- * Grouping key is category + name + size + packageQty — deliberately
- * conservative: it only merges items whose name is byte-identical, so it
- * never accidentally merges genuinely different products. Some catalog
- * families (e.g. the "קרמו שוקולד" cups, where the flavor is baked into
- * the name string itself) won't group with this rule and still show as
- * separate cards — that would need manual grouping, not automatic.
+ * Grouping key is category + (groupBaseName ?? name) + size + packageQty.
+ * By default this is conservative: it only merges items whose name is
+ * byte-identical, so it never accidentally merges genuinely different
+ * products. Families where the flavor is baked into `name` itself (e.g.
+ * "קרמו שוקולד לבן – ציפוי תות") need `groupBaseName` set explicitly in
+ * products.ts to opt into grouping — don't loosen the fallback name match
+ * itself (e.g. to size+packageQty alone), that risks merging genuinely
+ * different products that just happen to share a size.
  */
 export function groupProducts(products: Product[]): ProductGroup[] {
   const groups = new Map<string, ProductGroup>()
 
   for (const product of products) {
-    const key = `${product.category}|${product.name}|${product.size}|${product.packageQty}`
+    const groupName = product.groupBaseName ?? product.name
+    const key = `${product.category}|${groupName}|${product.size}|${product.packageQty}`
     const existing = groups.get(key)
     if (existing) {
       existing.variants.push(product)
@@ -24,7 +27,7 @@ export function groupProducts(products: Product[]): ProductGroup[] {
       groups.set(key, {
         groupKey: key,
         category: product.category,
-        name: product.name,
+        name: groupName,
         size: product.size,
         packageQty: product.packageQty,
         catalogNumber: product.catalogNumber,

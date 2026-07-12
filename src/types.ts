@@ -9,6 +9,16 @@ export interface Product {
   packageQty: string
   isSpecialOrder: boolean
   storageTemp?: string
+  /**
+   * Manual override for grouping products whose flavor/topping is baked
+   * into `name` itself (e.g. "קרמו שוקולד לבן – ציפוי תות"), where the
+   * automatic category+name+size+packageQty grouping in groupProducts.ts
+   * can't merge them because `name` differs per variant. When set, this
+   * is used as the group's display name and grouping key instead of
+   * `name` — the individual variant's real `name` is still used in the
+   * cart line and WhatsApp message.
+   */
+  groupBaseName?: string
 }
 
 export interface CartItem extends Product {
@@ -35,9 +45,10 @@ export interface FiltersState {
 
 /**
  * A group of products that are really the same physical item offered in
- * different flavors (identical category/name/size/packageQty, only
- * flavor + sku + isSpecialOrder differ). Rendered as one catalog card
- * with a flavor picker instead of one card per flavor.
+ * different flavors — either identical category/name/size/packageQty
+ * (automatic grouping), or sharing a manual `groupBaseName` when the
+ * flavor is baked into `name` itself. Rendered as one catalog card with
+ * a flavor picker instead of one card per flavor.
  */
 export interface ProductGroup {
   groupKey: string
