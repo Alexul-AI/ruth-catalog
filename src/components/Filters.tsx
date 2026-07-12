@@ -1,12 +1,18 @@
 import { CATEGORIES, CATEGORY_EMOJI } from '../data/products'
+import type { FiltersState } from '../types'
 import styles from './Filters.module.css'
 
 const FLAVORS = ['הכל', 'מתוק', 'מלוח', 'שוקו', 'ניטרלי', 'לבן פרווה / מריר', 'פיסטוק', 'פירות יער', 'וניל', 'פטל', 'תות', 'קפה', 'קרמל מלוח', 'פסיפלורה']
 
-export default function Filters({ filters, onChange }) {
+interface FiltersProps {
+  filters: FiltersState
+  onChange: (filters: FiltersState) => void
+}
+
+export default function Filters({ filters, onChange }: FiltersProps) {
   const { search, category, flavor, onlySpecial } = filters
 
-  function set(key, value) {
+  function set<K extends keyof FiltersState>(key: K, value: FiltersState[K]) {
     onChange({ ...filters, [key]: value })
   }
 

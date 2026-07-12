@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { sendWhatsAppOrder } from '../utils/whatsapp'
+import { buildWhatsAppUrl, sendWhatsAppOrder } from '../utils/whatsapp'
+import type { CartItem, OrderDetails } from '../types'
 import styles from './CartPanel.module.css'
 
-const EMPTY_DETAILS = {
+const EMPTY_DETAILS: OrderDetails = {
   customerName: '',
   businessName: '',
   phone: '',
@@ -12,19 +13,33 @@ const EMPTY_DETAILS = {
   contactBeforeConfirm: false,
 }
 
-export default function CartPanel({ cart, onClose, onUpdateQty, onRemove }) {
-  const [step, setStep] = useState('list') // 'list' | 'form'
-  const [details, setDetails] = useState(EMPTY_DETAILS)
+type Step = 'list' | 'form'
+
+interface CartPanelProps {
+  cart: CartItem[]
+  onClose: () => void
+  onUpdateQty: (id: string, qty: number) => void
+  onRemove: (id: string) => void
+}
+
+export default function CartPanel({ cart, onClose, onUpdateQty, onRemove }: CartPanelProps) {
+  const [step, setStep] = useState<Step>('list')
+  const [details, setDetails] = useState<OrderDetails>(EMPTY_DETAILS)
+  const [fallbackUrl, setFallbackUrl] = useState<string | null>(null)
 
   const totalItems = cart.reduce((s, i) => s + i.qty, 0)
-  const formValid = details.customerName.trim() && details.phone.trim() && cart.length > 0
+  const formValid = details.customerName.trim() !== '' && details.phone.trim() !== '' && cart.length > 0
 
-  function set(key, value) {
+  function set<K extends keyof OrderDetails>(key: K, value: OrderDetails[K]) {
     setDetails(prev => ({ ...prev, [key]: value }))
+    setFallbackUrl(null)
   }
 
   function handleSend() {
-    sendWhatsAppOrder(cart, details)
+    const opened = sendWhatsAppOrder(cart, details)
+    if (!opened) {
+      setFallbackUrl(buildWhatsAppUrl(cart, details))
+    }
   }
 
   return (
@@ -183,6 +198,17 @@ export default function CartPanel({ cart, onClose, onUpdateQty, onRemove }) {
               >
                 📱 שליחת הזמנה ב-WhatsApp
               </button>
+
+              {fallbackUrl && (
+                <a
+                  className={`${styles.backBtn} ${styles.fallbackLink}`}
+                  href={fallbackUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  WhatsApp לא נפתח? לחצו כאן לפתיחה ידנית
+                </a>
+              )}
 
               <button className={styles.backBtn} onClick={() => setStep('list')}>
                 ← חזרה לסיכום

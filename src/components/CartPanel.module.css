@@ -279,3 +279,9 @@
 }
 
 .backBtn:hover { color: var(--text); }
+
+.fallbackLink {
+  display: block;
+  text-align: center;
+  text-decoration: underline;
+}

@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { products } from './data/products'
 import { useCart } from './hooks/useCart'
+import type { FiltersState } from './types'
 
 import Header from './components/Header'
 import HeroSection from './components/HeroSection'
@@ -10,7 +11,7 @@ import CartPanel from './components/CartPanel'
 
 import styles from './App.module.css'
 
-const DEFAULT_FILTERS = {
+const DEFAULT_FILTERS: FiltersState = {
   search: '',
   category: 'הכל',
   flavor: 'הכל',
@@ -18,7 +19,7 @@ const DEFAULT_FILTERS = {
 }
 
 export default function App() {
-  const [filters, setFilters] = useState(DEFAULT_FILTERS)
+  const [filters, setFilters] = useState<FiltersState>(DEFAULT_FILTERS)
   const [cartOpen, setCartOpen] = useState(false)
 
   const { cart, addItem, removeItem, updateQty, totalItems } = useCart()

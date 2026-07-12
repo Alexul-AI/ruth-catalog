@@ -1,15 +1,25 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { CATEGORY_EMOJI } from '../data/products'
+import type { Product } from '../types'
 import styles from './ProductCard.module.css'
 
-export default function ProductCard({ product, onAdd }) {
+interface ProductCardProps {
+  product: Product
+  onAdd: (product: Product, qty: number) => void
+}
+
+export default function ProductCard({ product, onAdd }: ProductCardProps) {
   const [qty, setQty] = useState(1)
   const [added, setAdded] = useState(false)
+  const addedTimeout = useRef<ReturnType<typeof setTimeout>>()
+
+  useEffect(() => () => clearTimeout(addedTimeout.current), [])
 
   function handleAdd() {
     onAdd(product, qty)
     setAdded(true)
-    setTimeout(() => setAdded(false), 1200)
+    clearTimeout(addedTimeout.current)
+    addedTimeout.current = setTimeout(() => setAdded(false), 1200)
   }
 
   return (
