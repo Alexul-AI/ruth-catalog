@@ -15,10 +15,13 @@ Customers browse products, build a cart, and send a structured Hebrew order via 
 
 | File | Purpose |
 |------|---------|
-| `src/data/products.js` | All 80+ products from the PDF catalog — source of truth |
-| `src/utils/whatsapp.js` | WhatsApp number + message builder — **change number before deploy** |
-| `src/hooks/useCart.js` | All cart logic (add / remove / update qty) |
+| `src/data/products.ts` | All 93 products from the PDF catalog — source of truth |
+| `src/utils/whatsapp.ts` | WhatsApp number + message builder — number is already set to the real business number |
+| `src/hooks/useCart.ts` | All cart logic (add / remove / update qty), persisted to localStorage |
+| `src/types.ts` | Shared TypeScript types (`Product`, `CartItem`, `OrderDetails`, `FiltersState`) |
 | `src/index.css` | Global CSS variables (design tokens) — colors, radii, font |
+
+Project is TypeScript (converted 2026-07-12). All source files are `.ts`/`.tsx`; run `npm run typecheck` before committing.
 
 ## Design rules
 - **RTL always** — `direction: rtl` on body, all layout must work RTL
@@ -60,7 +63,7 @@ The final message sent is structured Hebrew text:
 ```
 
 ## Common tasks
-- **Add a product:** edit `src/data/products.js` following the existing shape
-- **Change WhatsApp number:** edit `WHATSAPP_NUMBER` in `src/utils/whatsapp.js`
+- **Add a product:** edit `src/data/products.ts` following the `Product` shape in `src/types.ts`
+- **Change WhatsApp number:** edit `WHATSAPP_NUMBER` in `src/utils/whatsapp.ts`
 - **Add a new page/route:** this is a single-page app (no router yet) — add React Router if needed
-- **Add product images:** add `imageUrl` field to products and update `ProductCard.jsx` to render `<img>` instead of the emoji placeholder
+- **Add product images:** add `imageUrl` field to `Product` in `src/types.ts` and update `ProductCard.tsx` to render `<img>` instead of the emoji placeholder

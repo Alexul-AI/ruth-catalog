@@ -5,7 +5,7 @@ Customers browse products, build an order, and send it to the business via Whats
 
 ## Stack
 
-- **React 18** + **Vite** — fast dev + build
+- **React 18** + **TypeScript** + **Vite** — fast dev + build
 - **CSS Modules** — scoped, zero-dependency styling
 - **No backend** — pure client-side, deploys as static files
 
@@ -24,19 +24,9 @@ npm run dev
 
 ---
 
-## ⚠️ Before deploying — set your WhatsApp number
+## WhatsApp number
 
-Open `src/utils/whatsapp.js` and replace:
-
-```js
-export const WHATSAPP_NUMBER = '972XXXXXXXXX'
-```
-
-With the real number, e.g.:
-
-```js
-export const WHATSAPP_NUMBER = '972521234567'
-```
+Already set in `src/utils/whatsapp.ts` (`WHATSAPP_NUMBER = '972549793967'`). If it ever needs to change, edit that constant.
 
 ---
 
@@ -60,30 +50,34 @@ No config needed — Vercel auto-detects Vite.
 ```
 src/
 ├── components/
-│   ├── Header.jsx / .module.css
-│   ├── HeroSection.jsx / .module.css
-│   ├── Filters.jsx / .module.css
-│   ├── ProductCard.jsx / .module.css
-│   └── CartPanel.jsx / .module.css
+│   ├── Header.tsx / .module.css
+│   ├── HeroSection.tsx / .module.css
+│   ├── Filters.tsx / .module.css
+│   ├── ProductCard.tsx / .module.css
+│   └── CartPanel.tsx / .module.css
 ├── data/
-│   └── products.js        ← all 80+ products from the PDF catalog
+│   └── products.ts        ← all 93 products from the PDF catalog
 ├── hooks/
-│   └── useCart.js         ← cart state management
+│   └── useCart.ts         ← cart state management (persisted to localStorage)
 ├── utils/
-│   └── whatsapp.js        ← WhatsApp message builder
-├── App.jsx
+│   └── whatsapp.ts        ← WhatsApp message builder
+├── types.ts               ← shared TypeScript types
+├── App.tsx
 ├── App.module.css
 ├── index.css              ← design tokens (:root CSS variables)
-└── main.jsx
+└── main.tsx
 ```
+
+Run `npm run typecheck` to type-check without building.
 
 ---
 
 ## Roadmap / Next Steps
 
+- [x] Cart persisted locally (localStorage) so a refresh doesn't lose an order
+- [x] Fallback WhatsApp link if the popup is blocked
 - [ ] Add real product images (replace emoji placeholders)
 - [ ] Admin panel to edit products without touching code (Supabase / Airtable)
-- [ ] Minimum order quantity validation per product
-- [ ] Order history saved locally (localStorage)
+- [ ] Minimum order quantity validation per product (e.g. enforce ordering by full package/carton, not loose units — needs a business decision on whether customers order by unit or by package)
 - [ ] Google Analytics / order tracking
 - [ ] PDF order summary download option
