@@ -19,6 +19,13 @@ export interface Product {
    * cart line and WhatsApp message.
    */
   groupBaseName?: string
+  /**
+   * Set to `false` for a product line the business currently can't
+   * fulfil (e.g. a paused department) — excluded from the catalog
+   * entirely, but the data stays in products.ts so it can come back by
+   * flipping this one flag. Omitted/`true` = active (the default).
+   */
+  active?: boolean
 }
 
 export interface CartItem extends Product {

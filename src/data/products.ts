@@ -3,12 +3,14 @@
  * Source: printed PDF catalog (pages 01–13)
  *
  * Category taxonomy simplified 2026-07-12 per the client's request to a
- * short 7-item filter list — see CLAUDE.md for the full mapping. The
- * chocolate-base/decoration products (c-* and d-*) still carry
- * category: 'שוקולד' internally (so CATEGORY_EMOJI still renders the
- * right icon on their cards), but 'שוקולד' is deliberately NOT in
- * CATEGORIES below, so it has no filter tab — those 22 products are
- * only reachable via "הכל" or search, per explicit client request.
+ * short 7-item filter list — see CLAUDE.md for the full mapping.
+ *
+ * The chocolate-base/decoration products (c-* and d-*, 22 total, still
+ * carrying category: 'שוקולד' internally) are marked `active: false` —
+ * Ruth Petifours currently has no working chocolate department, so these
+ * can't actually be fulfilled. Not deleted: the department may reopen
+ * later, at which point flip `active` back and 'שוקולד' can return to
+ * CATEGORIES. See CLAUDE.md for the full story.
  */
 import type { Product } from '../types'
 
@@ -33,7 +35,7 @@ export const CATEGORY_EMOJI: Record<string, string> = {
   'שוקולד':         '🍫',
 }
 
-export const products: Product[] = [
+const ALL_PRODUCTS: Product[] = [
   // ── טארטלטים מיני ──────────────────────────────────────────────────
   { id: 't-001', category: 'טארטלטים', name: 'טארטלט מיני',         catalogNumber: '1',  sku: '001',   flavor: 'שוקו',   size: '70×30 מ"מ', packageQty: '240 י"ח', isSpecialOrder: true  },
   { id: 't-002', category: 'טארטלטים', name: 'טארטלט מיני',         catalogNumber: '1',  sku: '01',    flavor: 'מלוח',   size: '70×30 מ"מ', packageQty: '240 י"ח', isSpecialOrder: true  },
@@ -81,31 +83,31 @@ export const products: Product[] = [
   { id: 'p-005', category: 'פאיים', name: 'בסיס פאי בינוני',  catalogNumber: '12', sku: '12',  flavor: 'מתוק',  size: '120×16 מ"מ', packageQty: '64 י"ח',  isSpecialOrder: false },
   { id: 'p-006', category: 'פאיים', name: 'בסיס פאי גדול',    catalogNumber: '24', sku: '10',  flavor: 'מתוק',  size: '240×18 מ"מ', packageQty: '10 י"ח',  isSpecialOrder: true  },
 
-  // ── שוקולד (was בסיסי שוקולד למילוי — temporary bucket, see CLAUDE.md) ──
-  { id: 'c-001', category: 'שוקולד', name: 'ספל קפה בינויו',    catalogNumber: '—', sku: '401/40/402', flavor: 'לבן פרווה / מריר',        size: '50×30 מ"מ', packageQty: '120 י"ח', isSpecialOrder: false },
-  { id: 'c-002', category: 'שוקולד', name: 'כוס משוננת',         catalogNumber: '—', sku: '037/37',     flavor: 'לבן פרווה / 60% מריר',    size: '35×25 מ"מ', packageQty: '250 י"ח', isSpecialOrder: false },
-  { id: 'c-003', category: 'שוקולד', name: 'כוס קטנה',           catalogNumber: '—', sku: '035/35',     flavor: 'לבן פרווה / 60% מריר',    size: '30×25 מ"מ', packageQty: '300 י"ח', isSpecialOrder: false },
-  { id: 'c-004', category: 'שוקולד', name: 'חצי כדור גדול',      catalogNumber: '—', sku: '601/60',     flavor: 'לבן פרווה / 60% מריר',    size: '60×30 מ"מ', packageQty: '60 י"ח',  isSpecialOrder: false },
-  { id: 'c-005', category: 'שוקולד', name: 'חצי כדור קטן',       catalogNumber: '—', sku: '501/50',     flavor: 'לבן פרווה / 60% מריר',    size: '50×25 מ"מ', packageQty: '100 י"ח', isSpecialOrder: false },
-  { id: 'c-006', category: 'שוקולד', name: 'גביע עגול',           catalogNumber: '—', sku: '0262/262',   flavor: 'לבן פרווה / 60% מריר',    size: '50×30 מ"מ', packageQty: '120 י"ח', isSpecialOrder: false },
-  { id: 'c-007', category: 'שוקולד', name: 'גביע מרובע',          catalogNumber: '—', sku: '0263/263',   flavor: 'לבן פרווה / 60% מריר',    size: '50×30 מ"מ', packageQty: '120 י"ח', isSpecialOrder: false },
-  { id: 'c-008', category: 'שוקולד', name: 'גביע עגול נמוך',      catalogNumber: '—', sku: '025/25',     flavor: 'לבן פרווה / 60% מריר',    size: '38×16 מ"מ', packageQty: '180 י"ח', isSpecialOrder: false },
-  { id: 'c-009', category: 'שוקולד', name: 'כוס גדולה',           catalogNumber: '—', sku: '0247/247',   flavor: 'לבן פרווה / 60% מריר',    size: '30×31 מ"מ', packageQty: '330 י"ח', isSpecialOrder: false },
+  // ── שוקולד (was בסיסי שוקולד למילוי) — active: false, chocolate dept paused ──
+  { id: 'c-001', category: 'שוקולד', name: 'ספל קפה בינויו',    catalogNumber: '—', sku: '401/40/402', flavor: 'לבן פרווה / מריר',        size: '50×30 מ"מ', packageQty: '120 י"ח', isSpecialOrder: false, active: false },
+  { id: 'c-002', category: 'שוקולד', name: 'כוס משוננת',         catalogNumber: '—', sku: '037/37',     flavor: 'לבן פרווה / 60% מריר',    size: '35×25 מ"מ', packageQty: '250 י"ח', isSpecialOrder: false, active: false },
+  { id: 'c-003', category: 'שוקולד', name: 'כוס קטנה',           catalogNumber: '—', sku: '035/35',     flavor: 'לבן פרווה / 60% מריר',    size: '30×25 מ"מ', packageQty: '300 י"ח', isSpecialOrder: false, active: false },
+  { id: 'c-004', category: 'שוקולד', name: 'חצי כדור גדול',      catalogNumber: '—', sku: '601/60',     flavor: 'לבן פרווה / 60% מריר',    size: '60×30 מ"מ', packageQty: '60 י"ח',  isSpecialOrder: false, active: false },
+  { id: 'c-005', category: 'שוקולד', name: 'חצי כדור קטן',       catalogNumber: '—', sku: '501/50',     flavor: 'לבן פרווה / 60% מריר',    size: '50×25 מ"מ', packageQty: '100 י"ח', isSpecialOrder: false, active: false },
+  { id: 'c-006', category: 'שוקולד', name: 'גביע עגול',           catalogNumber: '—', sku: '0262/262',   flavor: 'לבן פרווה / 60% מריר',    size: '50×30 מ"מ', packageQty: '120 י"ח', isSpecialOrder: false, active: false },
+  { id: 'c-007', category: 'שוקולד', name: 'גביע מרובע',          catalogNumber: '—', sku: '0263/263',   flavor: 'לבן פרווה / 60% מריר',    size: '50×30 מ"מ', packageQty: '120 י"ח', isSpecialOrder: false, active: false },
+  { id: 'c-008', category: 'שוקולד', name: 'גביע עגול נמוך',      catalogNumber: '—', sku: '025/25',     flavor: 'לבן פרווה / 60% מריר',    size: '38×16 מ"מ', packageQty: '180 י"ח', isSpecialOrder: false, active: false },
+  { id: 'c-009', category: 'שוקולד', name: 'כוס גדולה',           catalogNumber: '—', sku: '0247/247',   flavor: 'לבן פרווה / 60% מריר',    size: '30×31 מ"מ', packageQty: '330 י"ח', isSpecialOrder: false, active: false },
 
-  // ── שוקולד (was קישוטי שוקולד — temporary bucket, see CLAUDE.md) ────────
-  { id: 'd-001', category: 'שוקולד', name: 'משולש עם חור',     catalogNumber: '—', sku: '2670/2671', flavor: 'לבן פרווה / 60% מריר', size: '32×80 מ"מ',    packageQty: '192 י"ח', isSpecialOrder: false },
-  { id: 'd-002', category: 'שוקולד', name: 'כוס משוננת שוקולד', catalogNumber: '—', sku: '2320/2321', flavor: 'לבן פרווה / 60% מריר', size: '79×2 מ"מ',     packageQty: '168 י"ח', isSpecialOrder: false },
-  { id: 'd-003', category: 'שוקולד', name: 'פולי קפה',           catalogNumber: '—', sku: '042/42',    flavor: 'לבן פרווה / 60% מריר', size: '10 מ"מ',        packageQty: '330 י"ח', isSpecialOrder: false },
-  { id: 'd-004', category: 'שוקולד', name: 'משולש',              catalogNumber: '—', sku: '2570/2571', flavor: 'לבן פרווה / 60% מריר', size: '30×50 מ"מ',    packageQty: '288 י"ח', isSpecialOrder: false },
-  { id: 'd-005', category: 'שוקולד', name: 'דיסקית עגולה',       catalogNumber: '—', sku: '2860/2861', flavor: 'לבן פרווה / 60% מריר', size: 'קוטר 40 מ"מ',  packageQty: '192 י"ח', isSpecialOrder: false },
-  { id: 'd-006', category: 'שוקולד', name: 'עלה שוקולד',         catalogNumber: '—', sku: '039/39',    flavor: 'לבן פרווה / 60% מריר', size: '10 מ"מ',        packageQty: '800 י"ח', isSpecialOrder: false },
-  { id: 'd-007', category: 'שוקולד', name: 'לב גדול',            catalogNumber: '—', sku: '3930/3931', flavor: 'לבן פרווה / 60% מריר', size: '31×34 מ"מ',    packageQty: '320 י"ח', isSpecialOrder: false },
-  { id: 'd-008', category: 'שוקולד', name: 'כתם',                catalogNumber: '—', sku: '3250/3521', flavor: 'לבן פרווה / 60% מריר', size: '35 מ"מ',        packageQty: '192 י"ח', isSpecialOrder: false },
-  { id: 'd-009', category: 'שוקולד', name: 'פרח שוקולד',         catalogNumber: '—', sku: '4101/4102', flavor: 'לבן פרווה / 60% מריר', size: '19 מ"מ',        packageQty: '672 י"ח', isSpecialOrder: false },
-  { id: 'd-010', category: 'שוקולד', name: 'טבלת שוקולד',        catalogNumber: '—', sku: '2670/2671', flavor: 'לבן פרווה / 60% מריר', size: '30×45 מ"מ',    packageQty: '256 י"ח', isSpecialOrder: false },
-  { id: 'd-011', category: 'שוקולד', name: 'מקל ארוך',           catalogNumber: '—', sku: '2420/2421', flavor: 'לבן פרווה / 60% מריר', size: '112×6 מ"מ',    packageQty: '288 י"ח', isSpecialOrder: false },
-  { id: 'd-012', category: 'שוקולד', name: 'לב קטן',             catalogNumber: '—', sku: '2930/2931', flavor: 'לבן פרווה / 60% מריר', size: '15×15 מ"מ',    packageQty: '672 י"ח', isSpecialOrder: false },
-  { id: 'd-013', category: 'שוקולד', name: 'ריבוע עם חור',       catalogNumber: '—', sku: '2720/2721', flavor: 'לבן פרווה / 60% מריר', size: '40×40 מ"מ',    packageQty: '192 י"ח', isSpecialOrder: false },
+  // ── שוקולד (was קישוטי שוקולד) — active: false, chocolate dept paused ──────
+  { id: 'd-001', category: 'שוקולד', name: 'משולש עם חור',     catalogNumber: '—', sku: '2670/2671', flavor: 'לבן פרווה / 60% מריר', size: '32×80 מ"מ',    packageQty: '192 י"ח', isSpecialOrder: false, active: false },
+  { id: 'd-002', category: 'שוקולד', name: 'כוס משוננת שוקולד', catalogNumber: '—', sku: '2320/2321', flavor: 'לבן פרווה / 60% מריר', size: '79×2 מ"מ',     packageQty: '168 י"ח', isSpecialOrder: false, active: false },
+  { id: 'd-003', category: 'שוקולד', name: 'פולי קפה',           catalogNumber: '—', sku: '042/42',    flavor: 'לבן פרווה / 60% מריר', size: '10 מ"מ',        packageQty: '330 י"ח', isSpecialOrder: false, active: false },
+  { id: 'd-004', category: 'שוקולד', name: 'משולש',              catalogNumber: '—', sku: '2570/2571', flavor: 'לבן פרווה / 60% מריר', size: '30×50 מ"מ',    packageQty: '288 י"ח', isSpecialOrder: false, active: false },
+  { id: 'd-005', category: 'שוקולד', name: 'דיסקית עגולה',       catalogNumber: '—', sku: '2860/2861', flavor: 'לבן פרווה / 60% מריר', size: 'קוטר 40 מ"מ',  packageQty: '192 י"ח', isSpecialOrder: false, active: false },
+  { id: 'd-006', category: 'שוקולד', name: 'עלה שוקולד',         catalogNumber: '—', sku: '039/39',    flavor: 'לבן פרווה / 60% מריר', size: '10 מ"מ',        packageQty: '800 י"ח', isSpecialOrder: false, active: false },
+  { id: 'd-007', category: 'שוקולד', name: 'לב גדול',            catalogNumber: '—', sku: '3930/3931', flavor: 'לבן פרווה / 60% מריר', size: '31×34 מ"מ',    packageQty: '320 י"ח', isSpecialOrder: false, active: false },
+  { id: 'd-008', category: 'שוקולד', name: 'כתם',                catalogNumber: '—', sku: '3250/3521', flavor: 'לבן פרווה / 60% מריר', size: '35 מ"מ',        packageQty: '192 י"ח', isSpecialOrder: false, active: false },
+  { id: 'd-009', category: 'שוקולד', name: 'פרח שוקולד',         catalogNumber: '—', sku: '4101/4102', flavor: 'לבן פרווה / 60% מריר', size: '19 מ"מ',        packageQty: '672 י"ח', isSpecialOrder: false, active: false },
+  { id: 'd-010', category: 'שוקולד', name: 'טבלת שוקולד',        catalogNumber: '—', sku: '2670/2671', flavor: 'לבן פרווה / 60% מריר', size: '30×45 מ"מ',    packageQty: '256 י"ח', isSpecialOrder: false, active: false },
+  { id: 'd-011', category: 'שוקולד', name: 'מקל ארוך',           catalogNumber: '—', sku: '2420/2421', flavor: 'לבן פרווה / 60% מריר', size: '112×6 מ"מ',    packageQty: '288 י"ח', isSpecialOrder: false, active: false },
+  { id: 'd-012', category: 'שוקולד', name: 'לב קטן',             catalogNumber: '—', sku: '2930/2931', flavor: 'לבן פרווה / 60% מריר', size: '15×15 מ"מ',    packageQty: '672 י"ח', isSpecialOrder: false, active: false },
+  { id: 'd-013', category: 'שוקולד', name: 'ריבוע עם חור',       catalogNumber: '—', sku: '2720/2721', flavor: 'לבן פרווה / 60% מריר', size: '40×40 מ"מ',    packageQty: '192 י"ח', isSpecialOrder: false, active: false },
 
   // ── מאפים (was בסיסי מאפה) ────────────────────────────────────────────
   { id: 'w-001', category: 'מאפים', name: 'רול איטלקי ארוך',       catalogNumber: '—', sku: '252',  flavor: 'מתוק',   size: '75×20 מ"מ',    packageQty: '100 י"ח', isSpecialOrder: false },
@@ -153,3 +155,6 @@ export const products: Product[] = [
   { id: 'g-005', category: 'קינוחים מוכנים', name: 'קרמו שוקולד לבן – ציפוי שוקולד',    catalogNumber: '—', sku: '1177', flavor: 'שוקולד',    size: '9×9 יח\'/מגש', packageQty: '81 י"ח', isSpecialOrder: false, groupBaseName: 'קרמו שוקולד לבן' },
   { id: 'g-006', category: 'קינוחים מוכנים', name: 'קרמו שוקולד לבן – ציפוי פסיפלורה',  catalogNumber: '—', sku: '1188', flavor: 'פסיפלורה',  size: '9×9 יח\'/מגש', packageQty: '81 י"ח', isSpecialOrder: false, groupBaseName: 'קרמו שוקולד לבן' },
 ]
+
+/** The live catalog the app shows — excludes paused product lines (currently: the chocolate department, see the header comment above). */
+export const products: Product[] = ALL_PRODUCTS.filter(p => p.active !== false)

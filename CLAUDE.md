@@ -15,7 +15,7 @@ Customers browse products, build a cart, and send a structured Hebrew order via 
 
 | File | Purpose |
 |------|---------|
-| `src/data/products.ts` | All 93 products from the PDF catalog — source of truth |
+| `src/data/products.ts` | All 93 products from the PDF catalog in `ALL_PRODUCTS` — source of truth. The exported `products` (what the app uses) filters out anything `active: false` (currently: the 22 paused chocolate-department items) |
 | `src/utils/whatsapp.ts` | WhatsApp number + message builder — number is already set to the real business number |
 | `src/hooks/useCart.ts` | All cart logic (add / remove / update qty), persisted to localStorage |
 | `src/hooks/useOrderDetails.ts` | Customer-details form state — remembers name/business/phone/address between visits (not deliveryDate/notes, those are per-order) |
@@ -34,20 +34,11 @@ Project is TypeScript (converted 2026-07-12). All source files are `.ts`/`.tsx`;
 - Mobile-first — grid collapses to 2-col then 1-col on small screens
 
 ## Product data shape
-```js
-{
-  id: string,           // e.g. 't-001'
-  category: string,     // Hebrew category name
-  name: string,         // Hebrew product name
-  catalogNumber: string,// מספר קטלוגי (may be '—')
-  sku: string,          // מק"ט
-  flavor: string,       // טעם
-  size: string,         // גודל / dimensions
-  packageQty: string,   // כמות באריזה
-  isSpecialOrder: bool, // מוצר בהזמנה מיוחדת
-  storageTemp?: string, // optional, e.g. '-18°'
-}
-```
+See `src/types.ts`'s `Product` interface for the authoritative shape
+(`id`, `category`, `name`, `catalogNumber`, `sku`, `flavor`, `size`,
+`packageQty`, `isSpecialOrder`, plus optional `storageTemp`,
+`groupBaseName`, `active`) — don't duplicate the field list here, it's
+drifted out of sync with the real type before.
 
 ## Product grouping (flavor variants)
 
@@ -100,15 +91,26 @@ demo. Consolidated to the 7 categories the client asked for, in
 | `מרנגים` | `מרנג` |
 
 **Chocolate items (`c-001`..`c-009`, `d-001`..`d-013`, 22 products,
-formerly `בסיסי שוקולד למילוי`/`קישוטי שוקולד`) intentionally have no
-filter tab** — a first pass gave them a temporary 8th "שוקולד" tab as a
-placeholder pending a decision on where they belong, but the client
-explicitly asked to remove that tab (2026-07-12) rather than resolve the
-placement question. Their `category` field is still `'שוקולד'` internally
-(kept only so `CATEGORY_EMOJI['שוקולד']` still renders 🍫 on their cards)
-— they're reachable via "הכל" or the search box, just not their own tab.
-If a real home for them is decided later, add the new category name to
-`CATEGORIES` and update these 22 products' `category` field to match.
+formerly `בסיסי שוקולד למילוי`/`קישוטי שוקולד`) are fully excluded from
+the catalog, not just tabless.** Two-step history in one session
+(2026-07-12): first they got a temporary 8th "שוקולד" filter tab as a
+placeholder pending a decision on where they belong; then the client said
+remove the tab; then the client clarified the real reason — **Ruth
+Petifours currently has no working chocolate department**, so these 22
+products genuinely can't be fulfilled right now, not just "hard to
+categorize." That's a data-availability fact, not a filter/UI question.
+
+Handled via `Product.active` (`types.ts`): all 22 have `active: false` in
+the raw `ALL_PRODUCTS` array in `products.ts`; the exported `products`
+(what the app actually uses) is `ALL_PRODUCTS.filter(p => p.active !==
+false)`. They're **not** reachable via "הכל" or search anymore — fully
+gone from the live catalog, not merely tabless. Their `category` field is
+still `'שוקולד'` and `CATEGORY_EMOJI['שוקולד']` (🍫) is kept on purpose,
+along with the raw data — the department may reopen later ("she'll come
+back, but later" per the user), at which point flip `active` back to
+`true`/omit it and re-add `'שוקולד'` to `CATEGORIES`. Don't delete this
+data or the emoji entry as "unused cleanup" — it's intentionally dormant,
+not dead.
 
 Renaming/consolidating categories only widens filter buckets — it doesn't
 touch the flavor-variant grouping above, since `groupProducts.ts` groups
