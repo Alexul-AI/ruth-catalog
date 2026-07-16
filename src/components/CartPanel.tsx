@@ -11,12 +11,13 @@ interface CartPanelProps {
   cart: CartItem[]
   onClose: () => void
   onUpdateQty: (id: string, qty: number) => void
+  onUpdateNote: (id: string, note: string) => void
   onRemove: (id: string) => void
   onRestoreLastOrder: (items: CartItem[]) => void
   onOrderSent: () => void
 }
 
-export default function CartPanel({ cart, onClose, onUpdateQty, onRemove, onRestoreLastOrder, onOrderSent }: CartPanelProps) {
+export default function CartPanel({ cart, onClose, onUpdateQty, onUpdateNote, onRemove, onRestoreLastOrder, onOrderSent }: CartPanelProps) {
   const [step, setStep] = useState<Step>('list')
   const { details, set } = useOrderDetails()
   const [fallbackUrl, setFallbackUrl] = useState<string | null>(null)
@@ -133,6 +134,13 @@ export default function CartPanel({ cart, onClose, onUpdateQty, onRemove, onRest
                         >+</button>
                       </div>
                     </div>
+                    <input
+                      className={styles.itemNoteInput}
+                      placeholder="הערה למוצר זה (אופציונלי)"
+                      value={item.note ?? ''}
+                      onChange={e => onUpdateNote(item.id, e.target.value)}
+                      aria-label={`הערה עבור ${item.name}`}
+                    />
                   </div>
                 ))
               )}
@@ -156,6 +164,7 @@ export default function CartPanel({ cart, onClose, onUpdateQty, onRemove, onRest
               {cart.map(item => (
                 <div key={item.id} className={styles.summaryLine}>
                   {item.name} · מק״ט: {item.sku} · ×{item.qty}
+                  {item.note?.trim() && <div className={styles.summaryNote}>💬 {item.note.trim()}</div>}
                 </div>
               ))}
             </div>

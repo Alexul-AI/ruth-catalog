@@ -26,7 +26,7 @@ export default function App() {
   const [filters, setFilters] = useState<FiltersState>(DEFAULT_FILTERS)
   const [cartOpen, setCartOpen] = useState(false)
 
-  const { cart, addItem, removeItem, updateQty, restoreCart, clearCart, totalItems } = useCart()
+  const { cart, addItem, removeItem, updateQty, updateNote, restoreCart, clearCart, totalItems } = useCart()
   const { favorites, toggleFavorite } = useFavorites()
 
   // Derived: filtered product groups
@@ -100,6 +100,7 @@ export default function App() {
           cart={cart}
           onClose={() => setCartOpen(false)}
           onUpdateQty={updateQty}
+          onUpdateNote={updateNote}
           onRemove={removeItem}
           onRestoreLastOrder={restoreCart}
           onOrderSent={clearCart}

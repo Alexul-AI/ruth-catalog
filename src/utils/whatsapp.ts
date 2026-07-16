@@ -31,6 +31,7 @@ export function buildOrderMessage(cart: CartItem[], details: OrderDetails): stri
     if (item.size && item.size !== '—') lines.push(`   גודל: ${item.size}`)
     lines.push(`   כמות באריזה: ${item.packageQty}`)
     lines.push(`   כמות להזמנה: ${item.qty}`)
+    if (item.note?.trim()) lines.push(`   הערה למוצר: ${item.note.trim()}`)
     lines.push('')
   })
 

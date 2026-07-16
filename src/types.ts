@@ -30,6 +30,8 @@ export interface Product {
 
 export interface CartItem extends Product {
   qty: number
+  /** Per-line comment (e.g. "extra crispy") — separate from the order-wide notes field. */
+  note?: string
 }
 
 export interface OrderDetails {

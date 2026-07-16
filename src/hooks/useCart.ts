@@ -48,6 +48,11 @@ export function useCart() {
     setCart(prev => prev.map(i => (i.id === id ? { ...i, qty } : i)))
   }
 
+  /** Set (or clear) a per-line comment for a cart item */
+  function updateNote(id: string, note: string) {
+    setCart(prev => prev.map(i => (i.id === id ? { ...i, note } : i)))
+  }
+
   /** Clear the entire cart */
   function clearCart() {
     setCart([])
@@ -61,5 +66,5 @@ export function useCart() {
   const totalItems = cart.reduce((sum, i) => sum + i.qty, 0)
   const totalLines = cart.length
 
-  return { cart, addItem, removeItem, updateQty, clearCart, restoreCart, totalItems, totalLines }
+  return { cart, addItem, removeItem, updateQty, updateNote, clearCart, restoreCart, totalItems, totalLines }
 }

@@ -153,6 +153,28 @@
 
 .qtyBtn:hover { background: var(--border); }
 
+.itemNoteInput {
+  width: 100%;
+  margin-top: 0.5rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.4rem 0.6rem;
+  font-size: 12px;
+  outline: none;
+  transition: border-color 0.15s;
+  background: var(--white);
+}
+
+.itemNoteInput:focus {
+  border-color: var(--red);
+}
+
+.summaryNote {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 0.15rem;
+}
+
 .qtyVal {
   width: 30px;
   text-align: center;
