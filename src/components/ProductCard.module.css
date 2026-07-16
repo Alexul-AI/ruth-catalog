@@ -189,6 +189,11 @@
   background: var(--border);
 }
 
+.qtyBtn:disabled {
+  color: var(--muted);
+  cursor: not-allowed;
+}
+
 .qtyVal {
   width: 30px;
   text-align: center;
@@ -210,6 +215,11 @@
 
 .addBtn:hover {
   background: var(--red-hover);
+}
+
+.addBtn:disabled {
+  background: #9CA3AF;
+  cursor: not-allowed;
 }
 
 .addBtn.added {

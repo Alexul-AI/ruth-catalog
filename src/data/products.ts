@@ -37,9 +37,9 @@ export const CATEGORY_EMOJI: Record<string, string> = {
 
 const ALL_PRODUCTS: Product[] = [
   // ── טארטלטים מיני ──────────────────────────────────────────────────
-  { id: 't-001', category: 'טארטלטים', name: 'טארטלט מיני',         catalogNumber: '1',  sku: '001',   flavor: 'שוקו',   size: '70×30 מ"מ', packageQty: '240 י"ח', isSpecialOrder: true  },
-  { id: 't-002', category: 'טארטלטים', name: 'טארטלט מיני',         catalogNumber: '1',  sku: '01',    flavor: 'מלוח',   size: '70×30 מ"מ', packageQty: '240 י"ח', isSpecialOrder: true  },
-  { id: 't-003', category: 'טארטלטים', name: 'טארטלט מיני',         catalogNumber: '1',  sku: '1',     flavor: 'מתוק',   size: '70×30 מ"מ', packageQty: '240 י"ח', isSpecialOrder: false },
+  { id: 't-001', category: 'טארטלטים', name: 'טארטלט מיני סירה',   catalogNumber: '1',  sku: '001',   flavor: 'שוקו',   size: '70×30 מ"מ', packageQty: '240 י"ח', isSpecialOrder: true  },
+  { id: 't-002', category: 'טארטלטים', name: 'טארטלט מיני סירה',   catalogNumber: '1',  sku: '01',    flavor: 'מלוח',   size: '70×30 מ"מ', packageQty: '240 י"ח', isSpecialOrder: true  },
+  { id: 't-003', category: 'טארטלטים', name: 'טארטלט מיני סירה',   catalogNumber: '1',  sku: '1',     flavor: 'מתוק',   size: '70×30 מ"מ', packageQty: '240 י"ח', isSpecialOrder: false },
   { id: 't-004', category: 'טארטלטים', name: 'טארטלט מיני ריבוע',  catalogNumber: '2B', sku: 'B002',  flavor: 'שוקו',   size: '35×35 מ"מ', packageQty: '400 י"ח', isSpecialOrder: true  },
   { id: 't-005', category: 'טארטלטים', name: 'טארטלט מיני ריבוע',  catalogNumber: '2B', sku: 'B02',   flavor: 'מלוח',   size: '35×35 מ"מ', packageQty: '400 י"ח', isSpecialOrder: true  },
   { id: 't-006', category: 'טארטלטים', name: 'טארטלט מיני ריבוע',  catalogNumber: '2B', sku: 'B2',    flavor: 'מתוק',   size: '35×35 מ"מ', packageQty: '400 י"ח', isSpecialOrder: false },
@@ -66,9 +66,9 @@ const ALL_PRODUCTS: Product[] = [
   { id: 't-023', category: 'טארטלטים', name: 'טארטלט פרימיום B400',  catalogNumber: 'B400', sku: 'B00400', flavor: 'שוקו',  size: '45×45×14 מ"מ', packageQty: '240 י"ח', isSpecialOrder: false },
   { id: 't-024', category: 'טארטלטים', name: 'טארטלט פרימיום B400',  catalogNumber: 'B400', sku: 'B0400',  flavor: 'מלוח',  size: '45×45×14 מ"מ', packageQty: '240 י"ח', isSpecialOrder: false },
   { id: 't-025', category: 'טארטלטים', name: 'טארטלט פרימיום B400',  catalogNumber: 'B400', sku: 'B400',   flavor: 'מתוק',  size: '45×45×14 מ"מ', packageQty: '240 י"ח', isSpecialOrder: false },
-  { id: 't-026', category: 'טארטלטים', name: 'טארטלט פרימיום 600',   catalogNumber: '600',  sku: '00600',  flavor: 'שוקו',  size: '60/60×14 מ"מ', packageQty: '240 י"ח', isSpecialOrder: false },
-  { id: 't-027', category: 'טארטלטים', name: 'טארטלט פרימיום 600',   catalogNumber: '600',  sku: '0600',   flavor: 'מלוח',  size: '60/60×14 מ"מ', packageQty: '240 י"ח', isSpecialOrder: false },
-  { id: 't-028', category: 'טארטלטים', name: 'טארטלט פרימיום 600',   catalogNumber: '600',  sku: '600',    flavor: 'מתוק',  size: '60/60×14 מ"מ', packageQty: '240 י"ח', isSpecialOrder: false },
+  { id: 't-026', category: 'טארטלטים', name: 'טארטלט פרימיום 600',   catalogNumber: '600',  sku: '00600',  flavor: 'שוקו',  size: '60/60×14 מ"מ', packageQty: '150 י"ח', isSpecialOrder: false },
+  { id: 't-027', category: 'טארטלטים', name: 'טארטלט פרימיום 600',   catalogNumber: '600',  sku: '0600',   flavor: 'מלוח',  size: '60/60×14 מ"מ', packageQty: '150 י"ח', isSpecialOrder: false },
+  { id: 't-028', category: 'טארטלטים', name: 'טארטלט פרימיום 600',   catalogNumber: '600',  sku: '600',    flavor: 'מתוק',  size: '60/60×14 מ"מ', packageQty: '150 י"ח', isSpecialOrder: false },
 
   // ── טארט כפרי ───────────────────────────────────────────────────────
   { id: 't-029', category: 'טארטלטים', name: 'טארט כפרי',        catalogNumber: '044',  sku: '044',  flavor: 'ניטרלי', size: '48×16 מ"מ', packageQty: '240 י"ח', isSpecialOrder: true },
