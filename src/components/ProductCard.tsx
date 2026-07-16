@@ -25,9 +25,18 @@ export default function ProductCard({
   const [added, setAdded] = useState(false)
   const addedTimeout = useRef<ReturnType<typeof setTimeout>>()
 
+  // Switching flavor starts that flavor's quantity fresh at 0. Without this,
+  // qty was shared across flavors: pick תות, tap + twice, switch to פיסטוק,
+  // tap + once more, hit add — and all 3 land on פיסטוק while the תות pick
+  // silently vanishes, since only one "add" ever commits to the cart.
+  function selectVariant(i: number) {
+    setSelectedIndex(i)
+    setQty(0)
+  }
+
   // Keep the selection in sync when filters change which variant should lead,
   // without discarding a manual choice the customer already made for this render.
-  useEffect(() => setSelectedIndex(defaultIndex), [defaultIndex])
+  useEffect(() => selectVariant(defaultIndex), [defaultIndex])
 
   useEffect(() => () => clearTimeout(addedTimeout.current), [])
 
@@ -77,7 +86,7 @@ export default function ProductCard({
                 type="button"
                 className={`${styles.flavorChip} ${i === selectedIndex ? styles.flavorChipActive : ''}`}
                 aria-pressed={i === selectedIndex}
-                onClick={() => setSelectedIndex(i)}
+                onClick={() => selectVariant(i)}
               >
                 {v.flavor}
               </button>
