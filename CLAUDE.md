@@ -83,6 +83,38 @@ Default flavor selected in the picker: whichever flavor matches an active
 flavor/special-order filter, else the first non-special-order flavor (so a
 customer isn't defaulted into a variant that requires a special order).
 
+## Category taxonomy (simplified 2026-07-12, client request via Shai)
+
+The original 13-category filter list was too long for a mobile client
+demo. Consolidated to 8 categories in `products.ts`'s `CATEGORIES` — 7 the
+client asked for, plus one temporary bucket:
+
+| New category | Was |
+|---|---|
+| `טארטלטים` | `טארטלטים מיני` + `טארטלטים אישיים` + `טארטלטים פרימיום` + `טארט כפרי` |
+| `מקרונים מלאים` | unchanged |
+| `קינוחים מוכנים` | `קינוחים מוגמרים` + `כוסות קינוחים` (both are ready-to-serve, not a base) |
+| `מקרונים למילוי` | `בסיסי מקרון` |
+| `מאפים` | `בסיסי מאפה` |
+| `פאיים` | `בסיסי פאי` |
+| `מרנגים` | `מרנג` |
+| `שוקולד` *(temporary)* | `בסיסי שוקולד למילוי` + `קישוטי שוקולד` |
+
+**`שוקולד` is a placeholder, not one of the 7 requested categories** — the
+client's list didn't have an obvious home for the chocolate-cup-bases
+(`c-001`..`c-009`) or chocolate decorations/garnishes (`d-001`..`d-013`,
+22 products total). They're chocolate-work components, not "מאפים" in the
+baked-goods sense, so lumping them in there felt like a worse guess than a
+clearly-labeled extra category. **Open question for the user/Shai**: fold
+these into an existing category, or keep `שוקולד` as an 8th tab? Don't
+just silently pick one — ask, this was already flagged once.
+
+Renaming/consolidating categories only widens filter buckets — it doesn't
+touch the flavor-variant grouping above, since `groupProducts.ts` groups
+by `category+name+size+packageQty` and every product within an old
+category got the *same* new category value, so which products group
+together into one card is unchanged.
+
 ## Repeat-customer flow
 
 `CartPanel.tsx` has a third step, `'sent'`, shown right after "שליחת הזמנה
