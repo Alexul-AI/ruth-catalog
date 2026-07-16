@@ -42,18 +42,14 @@ export function groupProducts(products: Product[]): ProductGroup[] {
 
 /**
  * Picks which variant should be pre-selected in a group's flavor picker:
- * prefer one matching an active flavor filter, then one matching an
- * active "special order only" filter, then the first non-special-order
- * variant (the one any customer can order without waiting), else index 0.
+ * prefer one matching an active "special order only" filter, then the
+ * first non-special-order variant (the one any customer can order
+ * without waiting), else index 0.
  */
 export function getDefaultVariantIndex(
   group: ProductGroup,
-  options: { preferredFlavor?: string; preferSpecial?: boolean },
+  options: { preferSpecial?: boolean },
 ): number {
-  if (options.preferredFlavor) {
-    const idx = group.variants.findIndex(v => v.flavor === options.preferredFlavor)
-    if (idx !== -1) return idx
-  }
   if (options.preferSpecial) {
     const idx = group.variants.findIndex(v => v.isSpecialOrder)
     if (idx !== -1) return idx

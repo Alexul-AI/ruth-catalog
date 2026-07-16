@@ -7,7 +7,6 @@ import styles from './ProductCard.module.css'
 interface ProductCardProps {
   group: ProductGroup
   onAdd: (product: Product, qty: number) => void
-  preferredFlavor?: string
   preferSpecial?: boolean
   isFavorite: boolean
   onToggleFavorite: () => void
@@ -16,12 +15,11 @@ interface ProductCardProps {
 export default function ProductCard({
   group,
   onAdd,
-  preferredFlavor,
   preferSpecial,
   isFavorite,
   onToggleFavorite,
 }: ProductCardProps) {
-  const defaultIndex = getDefaultVariantIndex(group, { preferredFlavor, preferSpecial })
+  const defaultIndex = getDefaultVariantIndex(group, { preferSpecial })
   const [selectedIndex, setSelectedIndex] = useState(defaultIndex)
   const [qty, setQty] = useState(1)
   const [added, setAdded] = useState(false)

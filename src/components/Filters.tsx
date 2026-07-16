@@ -2,8 +2,6 @@ import { CATEGORIES, CATEGORY_EMOJI } from '../data/products'
 import type { FiltersState } from '../types'
 import styles from './Filters.module.css'
 
-const FLAVORS = ['הכל', 'מתוק', 'מלוח', 'שוקו', 'ניטרלי', 'לבן פרווה / מריר', 'פיסטוק', 'פירות יער', 'וניל', 'פטל', 'תות', 'קפה', 'קרמל מלוח', 'פסיפלורה']
-
 interface FiltersProps {
   filters: FiltersState
   onChange: (filters: FiltersState) => void
@@ -11,7 +9,7 @@ interface FiltersProps {
 }
 
 export default function Filters({ filters, onChange, favoritesCount }: FiltersProps) {
-  const { search, category, flavor, onlySpecial, onlyFavorites } = filters
+  const { search, category, onlySpecial, onlyFavorites } = filters
 
   function set<K extends keyof FiltersState>(key: K, value: FiltersState[K]) {
     onChange({ ...filters, [key]: value })
@@ -28,22 +26,6 @@ export default function Filters({ filters, onChange, favoritesCount }: FiltersPr
         onChange={e => set('search', e.target.value)}
         aria-label="חיפוש מוצרים"
       />
-
-      {/* Flavor chips */}
-      <div className={styles.row}>
-        <span className={styles.label}>טעם:</span>
-        <div className={styles.chips}>
-          {FLAVORS.map(f => (
-            <button
-              key={f}
-              className={`${styles.chip} ${flavor === f ? styles.active : ''}`}
-              onClick={() => set('flavor', f)}
-            >
-              {f}
-            </button>
-          ))}
-        </div>
-      </div>
 
       {/* Special order / favorites toggles */}
       <div className={styles.toggleRow}>
