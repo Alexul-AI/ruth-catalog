@@ -21,7 +21,7 @@ export default function ProductCard({
 }: ProductCardProps) {
   const defaultIndex = getDefaultVariantIndex(group, { preferSpecial })
   const [selectedIndex, setSelectedIndex] = useState(defaultIndex)
-  const [qty, setQty] = useState(1)
+  const [qty, setQty] = useState(0)
   const [added, setAdded] = useState(false)
   const addedTimeout = useRef<ReturnType<typeof setTimeout>>()
 
@@ -35,7 +35,9 @@ export default function ProductCard({
   const hasMultipleFlavors = group.variants.length > 1
 
   function handleAdd() {
+    if (qty === 0) return
     onAdd(product, qty)
+    setQty(0)
     setAdded(true)
     clearTimeout(addedTimeout.current)
     addedTimeout.current = setTimeout(() => setAdded(false), 1200)
@@ -109,7 +111,8 @@ export default function ProductCard({
         <div className={styles.qtyControl}>
           <button
             className={styles.qtyBtn}
-            onClick={() => setQty(q => Math.max(1, q - 1))}
+            onClick={() => setQty(q => Math.max(0, q - 1))}
+            disabled={qty === 0}
             aria-label="הפחת כמות"
           >
             −
@@ -127,6 +130,7 @@ export default function ProductCard({
         <button
           className={`${styles.addBtn} ${added ? styles.added : ''}`}
           onClick={handleAdd}
+          disabled={qty === 0}
         >
           {added ? '✓ נוסף' : 'הוסף להזמנה'}
         </button>
