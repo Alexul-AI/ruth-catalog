@@ -38,7 +38,6 @@ export interface OrderDetails {
 export interface FiltersState {
   search: string
   category: string
-  flavor: string
   onlySpecial: boolean
   onlyFavorites: boolean
 }

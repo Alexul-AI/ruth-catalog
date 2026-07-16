@@ -3,10 +3,12 @@
  * Source: printed PDF catalog (pages 01–13)
  *
  * Category taxonomy simplified 2026-07-12 per the client's request to a
- * short 7-item filter list, plus a temporary 8th "שוקולד" bucket for the
- * chocolate-base/decoration items that didn't map cleanly onto any of the
- * 7 requested categories — see CLAUDE.md for the full mapping + the open
- * question about where those should really go.
+ * short 7-item filter list — see CLAUDE.md for the full mapping. The
+ * chocolate-base/decoration products (c-* and d-*) still carry
+ * category: 'שוקולד' internally (so CATEGORY_EMOJI still renders the
+ * right icon on their cards), but 'שוקולד' is deliberately NOT in
+ * CATEGORIES below, so it has no filter tab — those 22 products are
+ * only reachable via "הכל" or search, per explicit client request.
  */
 import type { Product } from '../types'
 
@@ -18,7 +20,6 @@ export const CATEGORIES = [
   'מאפים',
   'פאיים',
   'מרנגים',
-  'שוקולד',
 ]
 
 export const CATEGORY_EMOJI: Record<string, string> = {

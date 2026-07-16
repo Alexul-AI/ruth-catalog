@@ -86,8 +86,8 @@ customer isn't defaulted into a variant that requires a special order).
 ## Category taxonomy (simplified 2026-07-12, client request via Shai)
 
 The original 13-category filter list was too long for a mobile client
-demo. Consolidated to 8 categories in `products.ts`'s `CATEGORIES` — 7 the
-client asked for, plus one temporary bucket:
+demo. Consolidated to the 7 categories the client asked for, in
+`products.ts`'s `CATEGORIES`:
 
 | New category | Was |
 |---|---|
@@ -98,16 +98,17 @@ client asked for, plus one temporary bucket:
 | `מאפים` | `בסיסי מאפה` |
 | `פאיים` | `בסיסי פאי` |
 | `מרנגים` | `מרנג` |
-| `שוקולד` *(temporary)* | `בסיסי שוקולד למילוי` + `קישוטי שוקולד` |
 
-**`שוקולד` is a placeholder, not one of the 7 requested categories** — the
-client's list didn't have an obvious home for the chocolate-cup-bases
-(`c-001`..`c-009`) or chocolate decorations/garnishes (`d-001`..`d-013`,
-22 products total). They're chocolate-work components, not "מאפים" in the
-baked-goods sense, so lumping them in there felt like a worse guess than a
-clearly-labeled extra category. **Open question for the user/Shai**: fold
-these into an existing category, or keep `שוקולד` as an 8th tab? Don't
-just silently pick one — ask, this was already flagged once.
+**Chocolate items (`c-001`..`c-009`, `d-001`..`d-013`, 22 products,
+formerly `בסיסי שוקולד למילוי`/`קישוטי שוקולד`) intentionally have no
+filter tab** — a first pass gave them a temporary 8th "שוקולד" tab as a
+placeholder pending a decision on where they belong, but the client
+explicitly asked to remove that tab (2026-07-12) rather than resolve the
+placement question. Their `category` field is still `'שוקולד'` internally
+(kept only so `CATEGORY_EMOJI['שוקולד']` still renders 🍫 on their cards)
+— they're reachable via "הכל" or the search box, just not their own tab.
+If a real home for them is decided later, add the new category name to
+`CATEGORIES` and update these 22 products' `category` field to match.
 
 Renaming/consolidating categories only widens filter buckets — it doesn't
 touch the flavor-variant grouping above, since `groupProducts.ts` groups

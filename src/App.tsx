@@ -16,7 +16,6 @@ import styles from './App.module.css'
 const DEFAULT_FILTERS: FiltersState = {
   search: '',
   category: 'הכל',
-  flavor: 'הכל',
   onlySpecial: false,
   onlyFavorites: false,
 }
@@ -37,15 +36,10 @@ export default function App() {
       if (filters.category !== 'הכל' && group.category !== filters.category) return false
       if (filters.onlyFavorites && !favorites.has(group.groupKey)) return false
 
-      // A group passes the flavor/special filters if at least one of its
-      // flavor variants satisfies them — the card itself still offers all
+      // A group passes the special-order filter if at least one of its
+      // flavor variants satisfies it — the card itself still offers all
       // flavors once shown, since it's really one product either way.
-      const hasMatchingVariant = group.variants.some(v => {
-        if (filters.flavor !== 'הכל' && v.flavor !== filters.flavor) return false
-        if (filters.onlySpecial && !v.isSpecialOrder) return false
-        return true
-      })
-      if (!hasMatchingVariant) return false
+      if (filters.onlySpecial && !group.variants.some(v => v.isSpecialOrder)) return false
 
       if (q) {
         const haystack = [
@@ -91,7 +85,6 @@ export default function App() {
                   key={group.groupKey}
                   group={group}
                   onAdd={addItem}
-                  preferredFlavor={filters.flavor !== 'הכל' ? filters.flavor : undefined}
                   preferSpecial={filters.onlySpecial}
                   isFavorite={favorites.has(group.groupKey)}
                   onToggleFavorite={() => toggleFavorite(group.groupKey)}
