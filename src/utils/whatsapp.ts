@@ -21,13 +21,9 @@ export function buildOrderMessage(cart: CartItem[], details: OrderDetails): stri
   lines.push('')
 
   cart.forEach((item, index) => {
-    lines.push(`${index + 1}. מק״ט: ${item.sku}`)
-    lines.push(`   מוצר: ${item.name}`)
-    lines.push(`   קטגוריה: ${item.category}`)
-    if (item.flavor) lines.push(`   טעם: ${item.flavor}`)
-    if (item.size && item.size !== '—') lines.push(`   גודל: ${item.size}`)
-    lines.push(`   כמות באריזה: ${item.packageQty}`)
-    lines.push(`   כמות להזמנה: ${item.qty}`)
+    lines.push(`${index + 1}. מוצר: ${item.name}`)
+    lines.push(`   מק״ט: ${item.sku}`)
+    lines.push(`   כמות: ${item.qty}`)
     lines.push('')
   })
 
