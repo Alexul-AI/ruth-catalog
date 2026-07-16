@@ -260,21 +260,6 @@
   line-height: 1.5;
 }
 
-.checkboxRow {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 12px;
-  color: var(--muted);
-  cursor: pointer;
-}
-
-.checkboxRow input {
-  accent-color: var(--red);
-  width: 15px;
-  height: 15px;
-}
-
 .waBtn {
   width: 100%;
   background: var(--green-wa);

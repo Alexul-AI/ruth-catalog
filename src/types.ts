@@ -35,11 +35,7 @@ export interface CartItem extends Product {
 export interface OrderDetails {
   customerName: string
   businessName: string
-  phone: string
-  address: string
-  deliveryDate: string
   notes: string
-  contactBeforeConfirm: boolean
 }
 
 export interface FiltersState {

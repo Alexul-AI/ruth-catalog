@@ -15,9 +15,6 @@ export function buildOrderMessage(cart: CartItem[], details: OrderDetails): stri
   lines.push('פרטי לקוח:')
   lines.push(`שם לקוח: ${details.customerName || '—'}`)
   lines.push(`שם העסק: ${details.businessName || '—'}`)
-  lines.push(`טלפון: ${details.phone || '—'}`)
-  lines.push(`כתובת אספקה: ${details.address || '—'}`)
-  lines.push(`תאריך אספקה מבוקש: ${details.deliveryDate || '—'}`)
   lines.push('')
 
   lines.push('סיכום הזמנה:')
@@ -44,11 +41,6 @@ export function buildOrderMessage(cart: CartItem[], details: OrderDetails): stri
   }
 
   lines.push('---')
-
-  if (details.contactBeforeConfirm) {
-    lines.push('נא לחזור אליי לפני אישור ההזמנה.')
-  }
-
   lines.push('נא לחזור אליי לאישור ההזמנה.')
   lines.push('תודה.')
 

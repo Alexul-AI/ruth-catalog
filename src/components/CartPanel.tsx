@@ -23,7 +23,7 @@ export default function CartPanel({ cart, onClose, onUpdateQty, onRemove, onRest
   const [lastOrder] = useState(loadLastOrder)
 
   const totalItems = cart.reduce((s, i) => s + i.qty, 0)
-  const formValid = details.customerName.trim() !== '' && details.phone.trim() !== '' && cart.length > 0
+  const formValid = details.customerName.trim() !== '' && cart.length > 0
   const hasSpecialOrderItem = cart.some(i => i.isSpecialOrder)
 
   function handleFieldChange<K extends keyof typeof details>(key: K, value: (typeof details)[K]) {
@@ -49,7 +49,7 @@ export default function CartPanel({ cart, onClose, onUpdateQty, onRemove, onRest
         <div className={styles.header}>
           <h2>
             {step === 'list' && '🛒 סיכום הזמנה'}
-            {step === 'form' && '📋 פרטי לקוח'}
+            {step === 'form' && '📋 סיכום הזמנה'}
             {step === 'sent' && '✅ ההזמנה נשלחה'}
           </h2>
           <button className={styles.closeBtn} onClick={onClose} aria-label="סגור">✕</button>
@@ -182,38 +182,10 @@ export default function CartPanel({ cart, onClose, onUpdateQty, onRemove, onRest
                   />
                 </label>
 
-                <label className={styles.field}>
-                  <span>טלפון *</span>
-                  <input
-                    type="tel"
-                    placeholder="050-0000000"
-                    value={details.phone}
-                    onChange={e => handleFieldChange('phone', e.target.value)}
-                  />
-                </label>
-
-                <label className={styles.field}>
-                  <span>תאריך אספקה</span>
-                  <input
-                    type="date"
-                    value={details.deliveryDate}
-                    onChange={e => handleFieldChange('deliveryDate', e.target.value)}
-                  />
-                </label>
-
-                <label className={`${styles.field} ${styles.fullWidth}`}>
-                  <span>כתובת אספקה</span>
-                  <input
-                    placeholder="רחוב, עיר"
-                    value={details.address}
-                    onChange={e => handleFieldChange('address', e.target.value)}
-                  />
-                </label>
-
                 {hasSpecialOrderItem && (
                   <p className={`${styles.specialNote} ${styles.fullWidth}`}>
                     ⚠ ההזמנה כוללת מוצר/ים "הזמנה מיוחדת" — אלה עשויים לדרוש זמן הכנה נוסף.
-                    מומלץ לוודא זמינות לתאריך המבוקש מול העסק.
+                    מומלץ לתאם זמינות וזמני הכנה מול העסק.
                   </p>
                 )}
 
@@ -225,15 +197,6 @@ export default function CartPanel({ cart, onClose, onUpdateQty, onRemove, onRest
                     value={details.notes}
                     onChange={e => handleFieldChange('notes', e.target.value)}
                   />
-                </label>
-
-                <label className={`${styles.checkboxRow} ${styles.fullWidth}`}>
-                  <input
-                    type="checkbox"
-                    checked={details.contactBeforeConfirm}
-                    onChange={e => handleFieldChange('contactBeforeConfirm', e.target.checked)}
-                  />
-                  נא לחזור אליי לפני אישור ההזמנה
                 </label>
               </div>
 
