@@ -69,9 +69,13 @@ export default function ProductCard({
       </button>
 
       <div className={styles.image}>
-        <span role="img" aria-label={group.category}>
-          {CATEGORY_EMOJI[group.category] ?? '🍰'}
-        </span>
+        {product.imageUrl ? (
+          <img src={product.imageUrl} alt={product.name} className={styles.photo} />
+        ) : (
+          <span role="img" aria-label={group.category}>
+            {CATEGORY_EMOJI[group.category] ?? '🍰'}
+          </span>
+        )}
       </div>
 
       <div className={styles.body}>

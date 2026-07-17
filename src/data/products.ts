@@ -50,7 +50,7 @@ const ALL_PRODUCTS: Product[] = [
   // ── טארטלטים אישיים ────────────────────────────────────────────────
   { id: 't-010', category: 'טארטלטים', name: 'טארטלט אישי',       catalogNumber: '3', sku: '003', flavor: 'שוקו',   size: '60×11 מ"מ', packageQty: '150 י"ח', isSpecialOrder: true  },
   { id: 't-011', category: 'טארטלטים', name: 'טארטלט אישי',       catalogNumber: '3', sku: '03',  flavor: 'מלוח',   size: '60×11 מ"מ', packageQty: '150 י"ח', isSpecialOrder: false },
-  { id: 't-012', category: 'טארטלטים', name: 'טארטלט אישי',       catalogNumber: '3', sku: '3',   flavor: 'מתוק',   size: '60×11 מ"מ', packageQty: '150 י"ח', isSpecialOrder: false },
+  { id: 't-012', category: 'טארטלטים', name: 'טארטלט אישי',       catalogNumber: '3', sku: '3',   flavor: 'מתוק',   size: '60×11 מ"מ', packageQty: '150 י"ח', isSpecialOrder: false, imageUrl: '/products/t-012.jpg' },
   { id: 't-013', category: 'טארטלטים', name: 'טארטלט אישי',       catalogNumber: '4', sku: '004', flavor: 'שוקו',   size: '50×11 מ"מ', packageQty: '240 י"ח', isSpecialOrder: false },
   { id: 't-014', category: 'טארטלטים', name: 'טארטלט אישי',       catalogNumber: '4', sku: '04',  flavor: 'מלוח',   size: '50×11 מ"מ', packageQty: '240 י"ח', isSpecialOrder: false },
   { id: 't-015', category: 'טארטלטים', name: 'טארטלט אישי',       catalogNumber: '4', sku: '4',   flavor: 'מתוק',   size: '50×11 מ"מ', packageQty: '240 י"ח', isSpecialOrder: false },

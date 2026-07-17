@@ -128,29 +128,34 @@ what makes the empty-cart state able to show "🔁 הזמינו שוב את הה
 let someone send the same order to two people), that's an intentional
 behavior change, not a bug — flag it before "fixing" it back.
 
-Customer name/business/phone/address persist across visits via
-`useOrderDetails` (separate from the cart snapshot above) so a repeat
-customer never retypes their contact info, even if they don't use "order
-again."
+Customer name/business persist across visits via `useOrderDetails`
+(separate from the cart snapshot above) so a repeat customer never
+retypes their contact info, even if they don't use "order again." Phone/
+address/delivery-date fields and the "contact before confirming"
+checkbox were deliberately removed (2026-07-16, client request) — the
+order is sent from the customer's own WhatsApp, so their number is
+already visible to the business natively.
 
 ## WhatsApp message format
-The final message sent is structured Hebrew text:
+The final message sent is structured Hebrew text (2026-07-16: trimmed to
+just product/sku/qty per line per client request — category, flavor,
+size, and package-qty used to be included too, deliberately dropped):
 ```
 שלום, אני רוצה לבצע הזמנה:
 
 פרטי לקוח:
 שם לקוח: ...
-...
+שם העסק: ...
 
 סיכום הזמנה:
 
-1. מק״ט: ...
-   מוצר: ...
-   ...
+1. מוצר: ...
+   מק״ט: ...
+   כמות: ...
 ```
 
 ## Common tasks
 - **Add a product:** edit `src/data/products.ts` following the `Product` shape in `src/types.ts`
 - **Change WhatsApp number:** edit `WHATSAPP_NUMBER` in `src/utils/whatsapp.ts`
 - **Add a new page/route:** this is a single-page app (no router yet) — add React Router if needed
-- **Add product images:** add `imageUrl` field to `Product` in `src/types.ts` and update `ProductCard.tsx` to render `<img>` instead of the emoji placeholder
+- **Add a product photo:** drop the image in `public/products/` (named by product id, e.g. `t-012.jpg`) and set that product's `imageUrl` field (e.g. `/products/t-012.jpg`) in `products.ts`. Per-variant, not per-group — only the specific flavor/sku the photo actually shows should get it. `ProductCard.tsx` falls back to the category emoji when `imageUrl` is absent, so photos can be added incrementally, one variant at a time, without needing full coverage first.

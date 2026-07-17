@@ -26,6 +26,12 @@ export interface Product {
    * flipping this one flag. Omitted/`true` = active (the default).
    */
   active?: boolean
+  /**
+   * Real product photo (e.g. "/products/t-012.jpg"), per-variant — not
+   * every flavor of a group needs one. ProductCard falls back to the
+   * category emoji when absent, so photos can be added incrementally.
+   */
+  imageUrl?: string
 }
 
 export interface CartItem extends Product {
