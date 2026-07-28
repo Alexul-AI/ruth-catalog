@@ -233,3 +233,21 @@
 .addBtn.added {
   background: #15803D;
 }
+
+/* Narrower cards (2-per-row mobile grid) can't fit qty controls + full
+   "הוסף להזמנה" label on one line without wrapping the button text onto
+   3 cramped lines — stack them instead. */
+@media (max-width: 640px) {
+  .footer {
+    flex-wrap: wrap;
+  }
+
+  .qtyControl {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .addBtn {
+    flex-basis: 100%;
+  }
+}
