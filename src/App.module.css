@@ -40,8 +40,3 @@
   }
 }
 
-@media (max-width: 400px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
-}
