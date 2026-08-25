@@ -137,10 +137,10 @@ const ALL_PRODUCTS: Product[] = [
   { id: 'mr-003', category: 'מרנגים', name: 'פבלובה לב',     catalogNumber: '—', sku: '831',  flavor: 'לבן', size: '35/50×15 מ"מ', packageQty: '120 י"ח', isSpecialOrder: false },
 
   // ── קינוחים מוכנים (was קינוחים מוגמרים) ────────────────────────────────
-  { id: 'f-001', category: 'קינוחים מוכנים', name: 'פחזניות קרמבל חום',               catalogNumber: '—', sku: '0305ז', flavor: 'שוקולד',    size: '45×30 מ"מ', packageQty: '120 י"ח', isSpecialOrder: false, imageUrl: '/products/f-001.jpg' },
-  { id: 'f-002', category: 'קינוחים מוכנים', name: 'פחזניות קרמבל סגול',              catalogNumber: '—', sku: '0309ז', flavor: 'קרם וניל',  size: '45×30 מ"מ', packageQty: '120 י"ח', isSpecialOrder: false, imageUrl: '/products/f-002.jpg' },
-  { id: 'f-003', category: 'קינוחים מוכנים', name: 'פחזניות קרמבל אדום',              catalogNumber: '—', sku: '0305ז', flavor: 'קרם וניל',  size: '45×30 מ"מ', packageQty: '120 י"ח', isSpecialOrder: false, imageUrl: '/products/f-003.jpg' },
-  { id: 'f-004', category: 'קינוחים מוכנים', name: 'פחזניות קרמבל לבן',               catalogNumber: '—', sku: '0305ז', flavor: 'קרם וניל',  size: '45×30 מ"מ', packageQty: '120 י"ח', isSpecialOrder: false, imageUrl: '/products/f-004.jpg' },
+  { id: 'f-001', category: 'קינוחים מוכנים', name: 'פחזניות קרמבל חום',               catalogNumber: '—', sku: '0305ז', flavor: 'שוקולד',    size: '45×30 מ"מ', packageQty: '70 י"ח', isSpecialOrder: false, imageUrl: '/products/f-001.jpg' },
+  { id: 'f-002', category: 'קינוחים מוכנים', name: 'פחזניות קרמבל סגול',              catalogNumber: '—', sku: '0309ז', flavor: 'קרם וניל',  size: '45×30 מ"מ', packageQty: '70 י"ח', isSpecialOrder: false, imageUrl: '/products/f-002.jpg' },
+  { id: 'f-003', category: 'קינוחים מוכנים', name: 'פחזניות קרמבל אדום',              catalogNumber: '—', sku: '0305ז', flavor: 'קרם וניל',  size: '45×30 מ"מ', packageQty: '70 י"ח', isSpecialOrder: false, imageUrl: '/products/f-003.jpg' },
+  { id: 'f-004', category: 'קינוחים מוכנים', name: 'פחזניות קרמבל לבן',               catalogNumber: '—', sku: '0305ז', flavor: 'קרם וניל',  size: '45×30 מ"מ', packageQty: '70 י"ח', isSpecialOrder: false, imageUrl: '/products/f-004.jpg' },
   { id: 'f-005', category: 'קינוחים מוכנים', name: 'טארט אישי ממולא תפוחים',         catalogNumber: '—', sku: '0331',  flavor: 'תפוחים',    size: '60×11 מ"מ', packageQty: '75 י"ח (15/מגש)', isSpecialOrder: false },
   { id: 'f-006', category: 'קינוחים מוכנים', name: 'טארט אישי ממולא פירות יער',      catalogNumber: '—', sku: '0335',  flavor: 'פירות יער', size: '60×11 מ"מ', packageQty: '75 י"ח (15/מגש)', isSpecialOrder: false },
   { id: 'f-007', category: 'קינוחים מוכנים', name: 'טארט אישי ממולא עוגת שוקולד',   catalogNumber: '—', sku: '0337',  flavor: 'שוקולד',    size: '60×11 מ"מ', packageQty: '75 י"ח (15/מגש)', isSpecialOrder: false },
