@@ -144,10 +144,11 @@
   color: var(--muted);
 }
 
-.tag.flavor {
-  background: var(--red-light);
-  color: var(--red);
-  border-color: var(--red-mid);
+.flavorHighlight {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--red-hover);
+  margin-top: 0.1rem;
 }
 
 .tag.temp {

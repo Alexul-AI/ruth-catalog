@@ -97,11 +97,7 @@ export default function ProductCard({
             ))}
           </div>
         ) : (
-          product.flavor && (
-            <div className={styles.tags}>
-              <span className={`${styles.tag} ${styles.flavor}`}>{product.flavor}</span>
-            </div>
-          )
+          product.flavor && <div className={styles.flavorHighlight}>{product.flavor}</div>
         )}
 
         <div className={styles.tags}>
