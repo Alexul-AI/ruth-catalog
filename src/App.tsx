@@ -85,7 +85,6 @@ export default function App() {
                   key={group.groupKey}
                   group={group}
                   onAdd={addItem}
-                  preferSpecial={filters.onlySpecial}
                   isFavorite={favorites.has(group.groupKey)}
                   onToggleFavorite={() => toggleFavorite(group.groupKey)}
                 />

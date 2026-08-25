@@ -1,13 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { CATEGORY_EMOJI } from '../data/products'
-import { getDefaultVariantIndex } from '../utils/groupProducts'
 import type { Product, ProductGroup } from '../types'
 import styles from './ProductCard.module.css'
 
 interface ProductCardProps {
   group: ProductGroup
   onAdd: (product: Product, qty: number) => void
-  preferSpecial?: boolean
   isFavorite: boolean
   onToggleFavorite: () => void
 }
@@ -15,33 +13,15 @@ interface ProductCardProps {
 export default function ProductCard({
   group,
   onAdd,
-  preferSpecial,
   isFavorite,
   onToggleFavorite,
 }: ProductCardProps) {
-  const defaultIndex = getDefaultVariantIndex(group, { preferSpecial })
-  const [selectedIndex, setSelectedIndex] = useState(defaultIndex)
+  const product = group.variants[0]
   const [qty, setQty] = useState(0)
   const [added, setAdded] = useState(false)
   const addedTimeout = useRef<ReturnType<typeof setTimeout>>()
 
-  // Switching flavor starts that flavor's quantity fresh at 0. Without this,
-  // qty was shared across flavors: pick תות, tap + twice, switch to פיסטוק,
-  // tap + once more, hit add — and all 3 land on פיסטוק while the תות pick
-  // silently vanishes, since only one "add" ever commits to the cart.
-  function selectVariant(i: number) {
-    setSelectedIndex(i)
-    setQty(0)
-  }
-
-  // Keep the selection in sync when filters change which variant should lead,
-  // without discarding a manual choice the customer already made for this render.
-  useEffect(() => selectVariant(defaultIndex), [defaultIndex])
-
   useEffect(() => () => clearTimeout(addedTimeout.current), [])
-
-  const product = group.variants[selectedIndex]
-  const hasMultipleFlavors = group.variants.length > 1
 
   function handleAdd() {
     if (qty === 0) return
@@ -88,23 +68,7 @@ export default function ProductCard({
         <div className={styles.category}>{group.category}</div>
         <h2 className={styles.name}>{group.name}</h2>
 
-        {hasMultipleFlavors ? (
-          <div className={styles.flavorRow} role="group" aria-label="בחירת טעם">
-            {group.variants.map((v, i) => (
-              <button
-                key={v.id}
-                type="button"
-                className={`${styles.flavorChip} ${i === selectedIndex ? styles.flavorChipActive : ''}`}
-                aria-pressed={i === selectedIndex}
-                onClick={() => selectVariant(i)}
-              >
-                {v.flavor}
-              </button>
-            ))}
-          </div>
-        ) : (
-          product.flavor && <div className={styles.flavorHighlight}>טעם: {product.flavor}</div>
-        )}
+        {product.flavor && <div className={styles.flavorHighlight}>טעם: {product.flavor}</div>}
 
         <div className={styles.tags}>
           {product.size && product.size !== '—' && (
