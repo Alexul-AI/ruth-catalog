@@ -70,7 +70,13 @@ export default function ProductCard({
 
       <div className={styles.image}>
         {product.imageUrl ? (
-          <img src={product.imageUrl} alt={product.name} className={styles.photo} />
+          <img
+            src={product.imageUrl}
+            alt={product.flavor ? `${product.name} – ${product.flavor}` : product.name}
+            className={styles.photo}
+            loading="lazy"
+            decoding="async"
+          />
         ) : (
           <span role="img" aria-label={group.category}>
             {CATEGORY_EMOJI[group.category] ?? '🍰'}
@@ -97,7 +103,7 @@ export default function ProductCard({
             ))}
           </div>
         ) : (
-          product.flavor && <div className={styles.flavorHighlight}>{product.flavor}</div>
+          product.flavor && <div className={styles.flavorHighlight}>טעם: {product.flavor}</div>
         )}
 
         <div className={styles.tags}>
