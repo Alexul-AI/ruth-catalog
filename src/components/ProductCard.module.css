@@ -16,7 +16,7 @@
 
 .image {
   height: 110px;
-  background: linear-gradient(135deg, #F9FAFB, #F3F4F6);
+  background: var(--white);
   display: flex;
   align-items: center;
   justify-content: center;
