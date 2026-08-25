@@ -30,17 +30,23 @@
 .PARAMETER Quality
   JPEG quality, 0-100. Default 85.
 
+.PARAMETER Force
+  Overwrite an existing OutputPath. Without it, an existing output file
+  is left untouched and the script errors instead of silently
+  clobbering a previous export.
+
 .EXAMPLE
   ./resize-product-images.ps1 -InputPath drive-downloads/t-001.png -OutputPath public/products/t-001.jpg
 
 .EXAMPLE
-  ./resize-product-images.ps1 -InputPath drive-downloads/ -OutputPath public/products/
+  ./resize-product-images.ps1 -InputPath drive-downloads/ -OutputPath public/products/ -Force
 #>
 param(
     [Parameter(Mandatory = $true)][string]$InputPath,
     [Parameter(Mandatory = $true)][string]$OutputPath,
     [int]$MaxDimension = 800,
-    [int]$Quality = 85
+    [int]$Quality = 85,
+    [switch]$Force
 )
 
 Add-Type -AssemblyName System.Drawing
@@ -50,11 +56,17 @@ function Resize-ProductImage {
         [string]$InputPath,
         [string]$OutputPath,
         [int]$MaxDim,
-        [int]$Quality
+        [int]$Quality,
+        [bool]$Force
     )
 
-    if ((Resolve-Path -LiteralPath $InputPath).Path -eq [System.IO.Path]::GetFullPath($OutputPath)) {
+    $resolvedIn = (Resolve-Path -LiteralPath $InputPath).Path
+    $resolvedOut = [System.IO.Path]::GetFullPath($OutputPath)
+    if ($resolvedIn.Equals($resolvedOut, [StringComparison]::OrdinalIgnoreCase)) {
         throw "InputPath and OutputPath must differ ($InputPath) - refusing to overwrite the source."
+    }
+    if ((Test-Path -LiteralPath $OutputPath) -and -not $Force) {
+        throw "OutputPath already exists ($OutputPath) - pass -Force to overwrite it."
     }
 
     $img = [System.Drawing.Image]::FromFile($InputPath)
@@ -80,7 +92,13 @@ function Resize-ProductImage {
             $jpegCodec = [System.Drawing.Imaging.ImageCodecInfo]::GetImageEncoders() | Where-Object { $_.MimeType -eq 'image/jpeg' }
             $encParams = New-Object System.Drawing.Imaging.EncoderParameters(1)
             $encParams.Param[0] = New-Object System.Drawing.Imaging.EncoderParameter([System.Drawing.Imaging.Encoder]::Quality, [int64]$Quality)
-            $bmp.Save($OutputPath, $jpegCodec, $encParams)
+
+            # Save to a temp file first, then move into place atomically - a
+            # crash/interrupt mid-save can never leave a half-written or
+            # zero-byte file at OutputPath.
+            $tempPath = "$OutputPath.tmp"
+            $bmp.Save($tempPath, $jpegCodec, $encParams)
+            Move-Item -LiteralPath $tempPath -Destination $OutputPath -Force
         } finally {
             $bmp.Dispose()
         }
@@ -101,8 +119,8 @@ if (Test-Path -LiteralPath $InputPath -PathType Container) {
     $sources = Get-ChildItem -LiteralPath $InputPath -File | Where-Object { $_.Extension -match '\.(jpg|jpeg|png)$' }
     foreach ($src in $sources) {
         $dest = Join-Path $OutputPath ([System.IO.Path]::GetFileNameWithoutExtension($src.Name) + '.jpg')
-        Resize-ProductImage -InputPath $src.FullName -OutputPath $dest -MaxDim $MaxDimension -Quality $Quality
+        Resize-ProductImage -InputPath $src.FullName -OutputPath $dest -MaxDim $MaxDimension -Quality $Quality -Force:$Force.IsPresent
     }
 } else {
-    Resize-ProductImage -InputPath $InputPath -OutputPath $OutputPath -MaxDim $MaxDimension -Quality $Quality
+    Resize-ProductImage -InputPath $InputPath -OutputPath $OutputPath -MaxDim $MaxDimension -Quality $Quality -Force:$Force.IsPresent
 }
