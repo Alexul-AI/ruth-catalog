@@ -91,12 +91,17 @@ if (-not (Test-Path -LiteralPath $ProductsTsPath)) {
     Write-Warning "products.ts not found at $ProductsTsPath - skipping cross-check"
 } else {
     $tsLines = Get-Content -LiteralPath $ProductsTsPath
+    $allProducts = @()
     $refs = @()
     foreach ($line in $tsLines) {
         $idMatch = [regex]::Match($line, "id:\s*'([^']+)'")
+        if (-not $idMatch.Success) { continue }
+        $productId = $idMatch.Groups[1].Value
+        $isActive = -not ($line -match "active:\s*false")
         $imgMatch = [regex]::Match($line, "imageUrl:\s*'/products/([^']+)'")
-        if ($idMatch.Success -and $imgMatch.Success) {
-            $refs += [PSCustomObject]@{ ProductId = $idMatch.Groups[1].Value; File = $imgMatch.Groups[1].Value }
+        $allProducts += [PSCustomObject]@{ ProductId = $productId; Active = $isActive; HasImage = $imgMatch.Success }
+        if ($imgMatch.Success) {
+            $refs += [PSCustomObject]@{ ProductId = $productId; File = $imgMatch.Groups[1].Value }
         }
     }
 
@@ -107,7 +112,15 @@ if (-not (Test-Path -LiteralPath $ProductsTsPath)) {
     $orphaned = $diskFiles | Where-Object { $referencedFiles -notcontains $_ }
     $dupGroups = $refs | Group-Object File | Where-Object { $_.Count -gt 1 }
 
+    $activeProducts = $allProducts | Where-Object { $_.Active }
+    $activeWithoutImage = $activeProducts | Where-Object { -not $_.HasImage }
+
+    Write-Host "Active products: $($activeProducts.Count)"
     Write-Host "Products with imageUrl: $($refs.Count) / distinct files referenced: $($referencedFiles.Count)"
+    Write-Host "Active products WITHOUT imageUrl: $($activeWithoutImage.Count)"
+    if ($activeWithoutImage.Count -gt 0) {
+        $activeWithoutImage | ForEach-Object { Write-Host "  $($_.ProductId)" }
+    }
 
     if ($missing.Count -gt 0) {
         Write-Host "-- Referenced but file missing on disk --"
