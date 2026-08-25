@@ -26,6 +26,11 @@
 
 html {
   scroll-behavior: smooth;
+  /* Belt-and-suspenders alongside index.html's meta color-scheme tag:
+     this is the actual CSS property the meta tag sets implicitly, so
+     it still applies even if something strips/ignores the meta tag.
+     Opts the whole page out of Chrome/Android's Auto Dark repaint. */
+  color-scheme: only light;
 }
 
 body {
