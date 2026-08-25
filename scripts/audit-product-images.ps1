@@ -2,12 +2,23 @@
 .SYNOPSIS
   QA pass over public/products/*.jpg: flags any file with dark pixels
   along its border (a symptom of the transparent-PNG-to-black-JPEG bug
-  resize-product-images.ps1 guards against) and writes one contact
-  sheet image so the whole catalog can be eyeballed at a glance.
+  resize-product-images.ps1 guards against), writes one contact sheet
+  image so the whole catalog can be eyeballed at a glance, and
+  cross-checks every file against products.ts's imageUrl fields so a
+  "no dark borders" result can't be mistaken for "every product's
+  photo is fine" - those are different claims. The dark-border scan
+  covers every file on disk, used or not; the products.ts cross-check
+  is what actually tells you whether a live product is missing a
+  photo, points at a file that doesn't exist, or shares a file with
+  another product.
 
 .PARAMETER ProductsDir
   Directory of product JPEGs to audit. Default public/products/
   relative to the repo root.
+
+.PARAMETER ProductsTsPath
+  Path to src/data/products.ts, used for the imageUrl cross-check.
+  Default: relative to the repo root.
 
 .PARAMETER OutputDir
   Where to write contact-sheet.jpg. Default: same as ProductsDir's
@@ -27,6 +38,7 @@
 #>
 param(
     [string]$ProductsDir = (Join-Path $PSScriptRoot "..\public\products"),
+    [string]$ProductsTsPath = (Join-Path $PSScriptRoot "..\src\data\products.ts"),
     [Parameter(Mandatory = $true)][string]$OutputDir,
     [int]$DarkThreshold = 40,
     [double]$FlagPct = 2.0
@@ -73,6 +85,54 @@ foreach ($f in $files) {
         $img.Dispose()
     }
 }
+
+Write-Host "=== products.ts imageUrl cross-check ==="
+if (-not (Test-Path -LiteralPath $ProductsTsPath)) {
+    Write-Warning "products.ts not found at $ProductsTsPath - skipping cross-check"
+} else {
+    $tsLines = Get-Content -LiteralPath $ProductsTsPath
+    $refs = @()
+    foreach ($line in $tsLines) {
+        $idMatch = [regex]::Match($line, "id:\s*'([^']+)'")
+        $imgMatch = [regex]::Match($line, "imageUrl:\s*'/products/([^']+)'")
+        if ($idMatch.Success -and $imgMatch.Success) {
+            $refs += [PSCustomObject]@{ ProductId = $idMatch.Groups[1].Value; File = $imgMatch.Groups[1].Value }
+        }
+    }
+
+    $diskFiles = @($files | ForEach-Object { $_.Name })
+    $referencedFiles = @($refs | ForEach-Object { $_.File } | Sort-Object -Unique)
+
+    $missing = $refs | Where-Object { $diskFiles -notcontains $_.File }
+    $orphaned = $diskFiles | Where-Object { $referencedFiles -notcontains $_ }
+    $dupGroups = $refs | Group-Object File | Where-Object { $_.Count -gt 1 }
+
+    Write-Host "Products with imageUrl: $($refs.Count) / distinct files referenced: $($referencedFiles.Count)"
+
+    if ($missing.Count -gt 0) {
+        Write-Host "-- Referenced but file missing on disk --"
+        $missing | Format-Table -AutoSize
+    } else {
+        Write-Host "-- No missing files (every referenced imageUrl exists on disk) --"
+    }
+
+    if ($orphaned.Count -gt 0) {
+        Write-Host "-- Files on disk not referenced by any product (orphaned) --"
+        $orphaned | ForEach-Object { Write-Host "  $_" }
+    } else {
+        Write-Host "-- No orphaned files (every file on disk is referenced) --"
+    }
+
+    if ($dupGroups.Count -gt 0) {
+        Write-Host "-- Same file referenced by more than one product id (verify intentional) --"
+        foreach ($grp in $dupGroups) {
+            Write-Host "  $($grp.Name): $(($grp.Group | ForEach-Object { $_.ProductId }) -join ', ')"
+        }
+    } else {
+        Write-Host "-- No duplicate imageUrl assignments --"
+    }
+}
+Write-Host ""
 
 $flagged = $results | Where-Object { $_.DarkBorderPct -gt $FlagPct }
 Write-Host "=== Files with >$FlagPct% dark border pixels ==="

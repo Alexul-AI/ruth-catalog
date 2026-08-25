@@ -93,12 +93,20 @@ function Resize-ProductImage {
             $encParams = New-Object System.Drawing.Imaging.EncoderParameters(1)
             $encParams.Param[0] = New-Object System.Drawing.Imaging.EncoderParameter([System.Drawing.Imaging.Encoder]::Quality, [int64]$Quality)
 
-            # Save to a temp file first, then move into place atomically - a
-            # crash/interrupt mid-save can never leave a half-written or
-            # zero-byte file at OutputPath.
-            $tempPath = "$OutputPath.tmp"
-            $bmp.Save($tempPath, $jpegCodec, $encParams)
-            Move-Item -LiteralPath $tempPath -Destination $OutputPath -Force
+            # Save to a uniquely-named temp file in the same directory, then
+            # move into place atomically - a crash/interrupt mid-save can
+            # never leave a half-written file at OutputPath, and a leftover
+            # temp file from a previous crash can never collide with or
+            # block a later run.
+            $tempPath = Join-Path ([System.IO.Path]::GetDirectoryName($resolvedOut)) ([System.IO.Path]::GetFileName($resolvedOut) + "." + [System.Guid]::NewGuid().ToString("N") + ".tmp")
+            try {
+                $bmp.Save($tempPath, $jpegCodec, $encParams)
+                Move-Item -LiteralPath $tempPath -Destination $OutputPath -Force
+            } finally {
+                if (Test-Path -LiteralPath $tempPath) {
+                    Remove-Item -LiteralPath $tempPath -Force
+                }
+            }
         } finally {
             $bmp.Dispose()
         }
