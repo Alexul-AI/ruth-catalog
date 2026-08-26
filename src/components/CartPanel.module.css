@@ -48,6 +48,7 @@
 .items {
   flex: 1;
   overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 0.85rem 1.1rem;
   display: flex;
   flex-direction: column;
@@ -200,6 +201,7 @@
   padding: 0.85rem 1.1rem 1.25rem;
   border-top: 1px solid var(--border);
   overflow-y: auto;
+  overscroll-behavior: contain;
   flex-shrink: 0;
 }
 
