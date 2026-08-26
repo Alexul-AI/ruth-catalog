@@ -20,7 +20,7 @@ export default function CartPanel({ cart, onClose, onUpdateQty, onRemove, onRest
   const [step, setStep] = useState<Step>('list')
   const { details, set } = useOrderDetails()
   const [fallbackUrl, setFallbackUrl] = useState<string | null>(null)
-  const [lastOrder] = useState(loadLastOrder)
+  const [lastOrder, setLastOrder] = useState(loadLastOrder)
 
   const totalItems = cart.reduce((s, i) => s + i.qty, 0)
   const formValid = details.customerName.trim() !== '' && cart.length > 0
@@ -34,6 +34,7 @@ export default function CartPanel({ cart, onClose, onUpdateQty, onRemove, onRest
   function handleSend() {
     const opened = sendWhatsAppOrder(cart, details)
     saveLastOrder(cart)
+    setLastOrder(cart)
     if (!opened) {
       setFallbackUrl(buildWhatsAppUrl(cart, details))
     }
