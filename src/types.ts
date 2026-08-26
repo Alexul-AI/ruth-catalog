@@ -7,6 +7,13 @@ export interface Product {
   flavor: string
   size: string
   packageQty: string
+  /**
+   * Units per package, as a number — kept separate from the display string
+   * `packageQty` (e.g. "75 י\"ח (15/מגש)") so anything doing real math
+   * (unit-count calculations, future Priority-facing exports) has a number
+   * to read instead of parsing text meant for display.
+   */
+  unitsPerPackage: number
   isSpecialOrder: boolean
   storageTemp?: string
   /**
