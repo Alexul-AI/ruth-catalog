@@ -109,7 +109,7 @@ export default function CartPanel({ cart, onClose, onUpdateQty, onRemove, onRest
                       className={styles.repeatBtn}
                       onClick={() => onRestoreLastOrder(lastOrder)}
                     >
-                      🔁 הזמינו שוב את ההזמנה הקודמת ({lastOrder.length} פריטים)
+                      🔁 הזמינו שוב את ההזמנה הקודמת ({lastOrder.length} מוצרים)
                     </button>
                   )}
                 </div>
@@ -152,7 +152,7 @@ export default function CartPanel({ cart, onClose, onUpdateQty, onRemove, onRest
 
             {cart.length > 0 && (
               <div className={styles.bottom}>
-                <p className={styles.summary}>{totalItems} פריטים ב-{cart.length} שורות</p>
+                <p className={styles.summary}>{cart.length} מוצרים · {totalItems} אריזות</p>
                 <button className={styles.nextBtn} onClick={() => setStep('form')}>
                   לפרטי לקוח ›
                 </button>

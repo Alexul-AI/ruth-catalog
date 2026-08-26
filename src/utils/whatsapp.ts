@@ -28,7 +28,7 @@ export function buildOrderMessage(cart: CartItem[], details: OrderDetails): stri
   })
 
   const totalItems = cart.reduce((sum, i) => sum + i.qty, 0)
-  lines.push(`סה"כ: ${totalItems} פריטים ב-${cart.length} שורות`)
+  lines.push(`סה"כ: ${cart.length} מוצרים · ${totalItems} אריזות`)
   lines.push('')
 
   if (details.notes.trim()) {
