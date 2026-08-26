@@ -44,7 +44,7 @@ export function buildOrderMessage(cart: CartItem[], details: OrderDetails): stri
     lines.push(`   טעם: ${item.flavor}`)
     lines.push(`   כמות: ${item.qty} ${pluralPackages(item.qty)} × ${item.unitsPerPackage} יח׳ = ${totalUnits} יח׳`)
     if (item.isSpecialOrder) {
-      lines.push('   ⚠️ הזמנה מיוחדת')
+      lines.push('   *הזמנה מיוחדת*')
     }
     lines.push('')
   })
@@ -59,7 +59,7 @@ export function buildOrderMessage(cart: CartItem[], details: OrderDetails): stri
   }
 
   lines.push('')
-  lines.push('⚠️ הבקשה כפופה לבדיקת מלאי ואישור סופי מול שי.')
+  lines.push('*שימו לב: הבקשה כפופה לבדיקת מלאי ואישור סופי מול שי.*')
   lines.push('')
   lines.push('נא לחזור אליי לאישור ההזמנה.')
   lines.push('תודה.')
