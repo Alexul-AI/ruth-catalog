@@ -5,7 +5,7 @@ import { useOrderDetails } from '../hooks/useOrderDetails'
 import type { CartItem } from '../types'
 import styles from './CartPanel.module.css'
 
-type Step = 'list' | 'form' | 'sent'
+type Step = 'list' | 'form' | 'whatsappOpened'
 
 interface CartPanelProps {
   cart: CartItem[]
@@ -13,10 +13,10 @@ interface CartPanelProps {
   onUpdateQty: (id: string, qty: number) => void
   onRemove: (id: string) => void
   onRestoreLastOrder: (items: CartItem[]) => void
-  onOrderSent: () => void
+  onStartNewOrder: () => void
 }
 
-export default function CartPanel({ cart, onClose, onUpdateQty, onRemove, onRestoreLastOrder, onOrderSent }: CartPanelProps) {
+export default function CartPanel({ cart, onClose, onUpdateQty, onRemove, onRestoreLastOrder, onStartNewOrder }: CartPanelProps) {
   const [step, setStep] = useState<Step>('list')
   const { details, set } = useOrderDetails()
   const [fallbackUrl, setFallbackUrl] = useState<string | null>(null)
@@ -37,8 +37,16 @@ export default function CartPanel({ cart, onClose, onUpdateQty, onRemove, onRest
     if (!opened) {
       setFallbackUrl(buildWhatsAppUrl(cart, details))
     }
-    onOrderSent()
-    setStep('sent')
+    // Opening WhatsApp (or even showing a fallback link) is not the same as
+    // the customer actually pressing send inside WhatsApp - we have no way
+    // to observe that. So the cart stays intact here; only an explicit
+    // "start a new order" click clears it. See handleStartNewOrder below.
+    setStep('whatsappOpened')
+  }
+
+  function handleStartNewOrder() {
+    onStartNewOrder()
+    setStep('list')
   }
 
   return (
@@ -50,20 +58,20 @@ export default function CartPanel({ cart, onClose, onUpdateQty, onRemove, onRest
           <h2>
             {step === 'list' && '🛒 סיכום הזמנה'}
             {step === 'form' && '📋 סיכום הזמנה'}
-            {step === 'sent' && '✅ ההזמנה נשלחה'}
+            {step === 'whatsappOpened' && '📱 WhatsApp נפתח'}
           </h2>
           <button className={styles.closeBtn} onClick={onClose} aria-label="סגור">✕</button>
         </div>
 
-        {/* ── Step: Sent confirmation ── */}
-        {step === 'sent' && (
+        {/* ── Step: WhatsApp opened - not yet confirmed sent ── */}
+        {step === 'whatsappOpened' && (
           <div className={styles.empty}>
-            <div className={styles.emptyIcon}>✅</div>
-            <p className={styles.emptyTitle}>ההזמנה נשלחה!</p>
+            <div className={styles.emptyIcon}>📱</div>
+            <p className={styles.emptyTitle}>WhatsApp נפתח</p>
             <p className={styles.emptySub}>
               {fallbackUrl
-                ? 'אם WhatsApp לא נפתח אוטומטית אצלכם, לחצו על הקישור למטה כדי לפתוח ולשלוח את ההודעה.'
-                : 'חלון WhatsApp נפתח עם פרטי ההזמנה — נשאר רק לאשר ולשלוח שם.'}
+                ? 'אם WhatsApp לא נפתח אוטומטית אצלכם, לחצו על הקישור למטה כדי לפתוח את ההודעה.'
+                : 'יש לבדוק את ההודעה וללחוץ על שליחה ב-WhatsApp.'}
             </p>
             <div className={styles.sentActions}>
               {fallbackUrl && (
@@ -76,8 +84,11 @@ export default function CartPanel({ cart, onClose, onUpdateQty, onRemove, onRest
                   פתיחת WhatsApp
                 </a>
               )}
-              <button className={styles.nextBtn} onClick={onClose}>
-                סגירה
+              <button className={styles.backBtn} onClick={() => setStep('list')}>
+                ← חזרה להזמנה
+              </button>
+              <button className={styles.nextBtn} onClick={handleStartNewOrder}>
+                התחלת הזמנה חדשה
               </button>
             </div>
           </div>
@@ -205,7 +216,7 @@ export default function CartPanel({ cart, onClose, onUpdateQty, onRemove, onRest
                 disabled={!formValid}
                 onClick={handleSend}
               >
-                📱 שליחת הזמנה ב-WhatsApp
+                📱 פתיחת ההזמנה ב-WhatsApp
               </button>
 
               {fallbackUrl && (

@@ -101,7 +101,7 @@ export default function App() {
           onUpdateQty={updateQty}
           onRemove={removeItem}
           onRestoreLastOrder={restoreCart}
-          onOrderSent={clearCart}
+          onStartNewOrder={clearCart}
         />
       )}
     </>
