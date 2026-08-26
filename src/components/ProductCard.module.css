@@ -6,12 +6,21 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  transition: box-shadow 0.2s, transform 0.2s;
+  transition: box-shadow 0.2s, transform 0.2s, border-color 0.15s, background 0.15s;
 }
 
 .card:hover {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.09);
   transform: translateY(-2px);
+}
+
+/* +/- write straight to the cart now, with no separate "add" button to
+   confirm the action - this border/tint is the only remaining signal
+   that a card has a nonzero quantity, so it needs to survive scrolling
+   past it, not just flash briefly. */
+.cardSelected {
+  border: 2px solid var(--red);
+  background: var(--red-light);
 }
 
 .image {
@@ -139,7 +148,7 @@
   border-top: 1px solid var(--border);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
 }
 
 .qtyControl {
@@ -178,45 +187,3 @@
   font-weight: 600;
 }
 
-.addBtn {
-  flex: 1;
-  background: var(--red);
-  color: var(--white);
-  border: none;
-  border-radius: var(--radius-sm);
-  padding: 0.45rem 0.5rem;
-  font-size: 12px;
-  font-weight: 600;
-  transition: background 0.15s;
-}
-
-.addBtn:hover {
-  background: var(--red-hover);
-}
-
-.addBtn:disabled {
-  background: #9CA3AF;
-  cursor: not-allowed;
-}
-
-.addBtn.added {
-  background: #15803D;
-}
-
-/* Narrower cards (2-per-row mobile grid) can't fit qty controls + full
-   "הוסף להזמנה" label on one line without wrapping the button text onto
-   3 cramped lines — stack them instead. */
-@media (max-width: 640px) {
-  .footer {
-    flex-wrap: wrap;
-  }
-
-  .qtyControl {
-    flex: 1;
-    justify-content: center;
-  }
-
-  .addBtn {
-    flex-basis: 100%;
-  }
-}

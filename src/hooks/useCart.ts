@@ -23,12 +23,20 @@ export function useCart() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(cart))
   }, [cart])
 
-  /** Add product to cart (or increment qty if already present) */
-  function addItem(product: Product, qty = 1) {
+  /**
+   * Set a product's cart quantity directly (adds it if absent, removes it
+   * at qty <= 0) - the single operation the catalog's +/- steppers need,
+   * since they no longer go through a separate "add to cart" commit step.
+   */
+  function setItemQty(product: Product, qty: number) {
+    if (qty <= 0) {
+      removeItem(product.id)
+      return
+    }
     setCart(prev => {
       const existing = prev.find(i => i.id === product.id)
       if (existing) {
-        return prev.map(i => (i.id === product.id ? { ...i, qty: i.qty + qty } : i))
+        return prev.map(i => (i.id === product.id ? { ...i, qty } : i))
       }
       return [...prev, { ...product, qty }]
     })
@@ -61,5 +69,5 @@ export function useCart() {
   const totalItems = cart.reduce((sum, i) => sum + i.qty, 0)
   const totalLines = cart.length
 
-  return { cart, addItem, removeItem, updateQty, clearCart, restoreCart, totalItems, totalLines }
+  return { cart, setItemQty, removeItem, updateQty, clearCart, restoreCart, totalItems, totalLines }
 }

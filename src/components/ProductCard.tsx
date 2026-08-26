@@ -1,39 +1,26 @@
-import { useEffect, useRef, useState } from 'react'
 import { CATEGORY_EMOJI } from '../data/products'
 import type { Product, ProductGroup } from '../types'
 import styles from './ProductCard.module.css'
 
 interface ProductCardProps {
   group: ProductGroup
-  onAdd: (product: Product, qty: number) => void
+  qty: number
+  onQtyChange: (product: Product, qty: number) => void
   isFavorite: boolean
   onToggleFavorite: () => void
 }
 
 export default function ProductCard({
   group,
-  onAdd,
+  qty,
+  onQtyChange,
   isFavorite,
   onToggleFavorite,
 }: ProductCardProps) {
   const product = group.variants[0]
-  const [qty, setQty] = useState(0)
-  const [added, setAdded] = useState(false)
-  const addedTimeout = useRef<ReturnType<typeof setTimeout>>()
-
-  useEffect(() => () => clearTimeout(addedTimeout.current), [])
-
-  function handleAdd() {
-    if (qty === 0) return
-    onAdd(product, qty)
-    setQty(0)
-    setAdded(true)
-    clearTimeout(addedTimeout.current)
-    addedTimeout.current = setTimeout(() => setAdded(false), 1200)
-  }
 
   return (
-    <article className={styles.card}>
+    <article className={`${styles.card} ${qty > 0 ? styles.cardSelected : ''}`}>
       {product.isSpecialOrder && (
         <div className={styles.specialBadge}>★ הזמנה מיוחדת</div>
       )}
@@ -90,7 +77,7 @@ export default function ProductCard({
         <div className={styles.qtyControl}>
           <button
             className={styles.qtyBtn}
-            onClick={() => setQty(q => Math.max(0, q - 1))}
+            onClick={() => onQtyChange(product, qty - 1)}
             disabled={qty === 0}
             aria-label="הפחת כמות"
           >
@@ -99,20 +86,12 @@ export default function ProductCard({
           <span className={styles.qtyVal}>{qty}</span>
           <button
             className={styles.qtyBtn}
-            onClick={() => setQty(q => q + 1)}
+            onClick={() => onQtyChange(product, qty + 1)}
             aria-label="הגדל כמות"
           >
             +
           </button>
         </div>
-
-        <button
-          className={`${styles.addBtn} ${added ? styles.added : ''}`}
-          onClick={handleAdd}
-          disabled={qty === 0}
-        >
-          {added ? '✓ נוסף' : 'הוסף להזמנה'}
-        </button>
       </div>
     </article>
   )

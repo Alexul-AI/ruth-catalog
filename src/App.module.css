@@ -29,6 +29,12 @@
   font-size: 1rem;
 }
 
+/* Reserves room for OrderSummaryBar's fixed height so it never covers the
+   last row of cards - only applied while the bar is actually showing. */
+.withSummaryBar {
+  padding-bottom: calc(52px + 1.5rem + env(safe-area-inset-bottom));
+}
+
 @media (max-width: 640px) {
   .catalogSection {
     padding: 1.25rem 1rem 3rem;

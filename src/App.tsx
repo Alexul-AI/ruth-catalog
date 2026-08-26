@@ -10,6 +10,7 @@ import HeroSection from './components/HeroSection'
 import Filters from './components/Filters'
 import ProductCard from './components/ProductCard'
 import CartPanel from './components/CartPanel'
+import OrderSummaryBar from './components/OrderSummaryBar'
 
 import styles from './App.module.css'
 
@@ -26,8 +27,10 @@ export default function App() {
   const [filters, setFilters] = useState<FiltersState>(DEFAULT_FILTERS)
   const [cartOpen, setCartOpen] = useState(false)
 
-  const { cart, addItem, removeItem, updateQty, restoreCart, clearCart, totalItems } = useCart()
+  const { cart, setItemQty, removeItem, updateQty, restoreCart, clearCart, totalItems, totalLines } = useCart()
   const { favorites, toggleFavorite } = useFavorites()
+
+  const cartQtyById = useMemo(() => new Map(cart.map(item => [item.id, item.qty])), [cart])
 
   // Derived: filtered product groups
   const filteredGroups = useMemo(() => {
@@ -62,9 +65,9 @@ export default function App() {
 
   return (
     <>
-      <Header totalItems={totalItems} onCartOpen={() => setCartOpen(true)} />
+      <Header productCount={totalLines} onCartOpen={() => setCartOpen(true)} />
 
-      <main>
+      <main className={totalLines > 0 ? styles.withSummaryBar : ''}>
         <HeroSection onStart={scrollToCatalog} />
 
         <section className={styles.catalogSection} id="catalog">
@@ -84,7 +87,8 @@ export default function App() {
                 <ProductCard
                   key={group.groupKey}
                   group={group}
-                  onAdd={addItem}
+                  qty={cartQtyById.get(group.variants[0].id) ?? 0}
+                  onQtyChange={setItemQty}
                   isFavorite={favorites.has(group.groupKey)}
                   onToggleFavorite={() => toggleFavorite(group.groupKey)}
                 />
@@ -93,6 +97,8 @@ export default function App() {
           )}
         </section>
       </main>
+
+      <OrderSummaryBar totalLines={totalLines} totalItems={totalItems} onOpen={() => setCartOpen(true)} />
 
       {cartOpen && (
         <CartPanel

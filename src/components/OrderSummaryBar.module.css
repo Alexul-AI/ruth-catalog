@@ -1,0 +1,33 @@
+.bar {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 40;
+  min-height: 52px;
+  padding: 0.75rem 1.25rem calc(0.75rem + env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  background: var(--red);
+  color: var(--white);
+  border: none;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.18);
+  font-family: inherit;
+}
+
+.bar:hover {
+  background: var(--red-hover);
+}
+
+.label {
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.counts {
+  font-size: 0.85rem;
+  font-weight: 600;
+  opacity: 0.92;
+}

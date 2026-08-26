@@ -1,11 +1,11 @@
 import styles from './Header.module.css'
 
 interface HeaderProps {
-  totalItems: number
+  productCount: number
   onCartOpen: () => void
 }
 
-export default function Header({ totalItems, onCartOpen }: HeaderProps) {
+export default function Header({ productCount, onCartOpen }: HeaderProps) {
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
@@ -20,7 +20,7 @@ export default function Header({ totalItems, onCartOpen }: HeaderProps) {
         <button className={styles.cartBtn} onClick={onCartOpen} aria-label="פתח סל הזמנה">
           <span>🛒</span>
           <span>הזמנה</span>
-          {totalItems > 0 && <span className={styles.badge}>{totalItems}</span>}
+          {productCount > 0 && <span className={styles.badge}>{productCount}</span>}
         </button>
       </div>
     </header>
