@@ -24,21 +24,27 @@ export function useCart() {
   }, [cart])
 
   /**
-   * Set a product's cart quantity directly (adds it if absent, removes it
-   * at qty <= 0) - the single operation the catalog's +/- steppers need,
-   * since they no longer go through a separate "add to cart" commit step.
+   * Adjust a product's cart quantity by +1/-1 (adds it if absent, removes
+   * it once the result is <= 0) - the operation the catalog's +/- steppers
+   * need now that they write straight to the cart with no separate "add"
+   * commit step. Computes the new quantity from the live `prev` inside the
+   * setCart updater, not from a qty value the caller read earlier - a few
+   * taps in quick succession each still see the real current quantity even
+   * if they land in the same React batch, instead of every tap computing
+   * "+1" off the same stale number and only the last one winning.
    */
-  function setItemQty(product: Product, qty: number) {
-    if (qty <= 0) {
-      removeItem(product.id)
-      return
-    }
+  function adjustItemQty(product: Product, delta: number) {
     setCart(prev => {
+      const currentQty = prev.find(i => i.id === product.id)?.qty ?? 0
+      const nextQty = currentQty + delta
+      if (nextQty <= 0) {
+        return prev.filter(i => i.id !== product.id)
+      }
       const existing = prev.find(i => i.id === product.id)
       if (existing) {
-        return prev.map(i => (i.id === product.id ? { ...i, qty } : i))
+        return prev.map(i => (i.id === product.id ? { ...i, qty: nextQty } : i))
       }
-      return [...prev, { ...product, qty }]
+      return [...prev, { ...product, qty: nextQty }]
     })
   }
 
@@ -69,5 +75,5 @@ export function useCart() {
   const totalItems = cart.reduce((sum, i) => sum + i.qty, 0)
   const totalLines = cart.length
 
-  return { cart, setItemQty, removeItem, updateQty, clearCart, restoreCart, totalItems, totalLines }
+  return { cart, adjustItemQty, removeItem, updateQty, clearCart, restoreCart, totalItems, totalLines }
 }

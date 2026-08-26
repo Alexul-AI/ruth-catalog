@@ -5,7 +5,7 @@ import styles from './ProductCard.module.css'
 interface ProductCardProps {
   group: ProductGroup
   qty: number
-  onQtyChange: (product: Product, qty: number) => void
+  onQtyAdjust: (product: Product, delta: number) => void
   isFavorite: boolean
   onToggleFavorite: () => void
 }
@@ -13,7 +13,7 @@ interface ProductCardProps {
 export default function ProductCard({
   group,
   qty,
-  onQtyChange,
+  onQtyAdjust,
   isFavorite,
   onToggleFavorite,
 }: ProductCardProps) {
@@ -77,7 +77,7 @@ export default function ProductCard({
         <div className={styles.qtyControl}>
           <button
             className={styles.qtyBtn}
-            onClick={() => onQtyChange(product, qty - 1)}
+            onClick={() => onQtyAdjust(product, -1)}
             disabled={qty === 0}
             aria-label="הפחת כמות"
           >
@@ -86,7 +86,7 @@ export default function ProductCard({
           <span className={styles.qtyVal}>{qty}</span>
           <button
             className={styles.qtyBtn}
-            onClick={() => onQtyChange(product, qty + 1)}
+            onClick={() => onQtyAdjust(product, 1)}
             aria-label="הגדל כמות"
           >
             +

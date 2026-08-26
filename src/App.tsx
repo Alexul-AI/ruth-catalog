@@ -27,7 +27,7 @@ export default function App() {
   const [filters, setFilters] = useState<FiltersState>(DEFAULT_FILTERS)
   const [cartOpen, setCartOpen] = useState(false)
 
-  const { cart, setItemQty, removeItem, updateQty, restoreCart, clearCart, totalItems, totalLines } = useCart()
+  const { cart, adjustItemQty, removeItem, updateQty, restoreCart, clearCart, totalItems, totalLines } = useCart()
   const { favorites, toggleFavorite } = useFavorites()
 
   const cartQtyById = useMemo(() => new Map(cart.map(item => [item.id, item.qty])), [cart])
@@ -88,7 +88,7 @@ export default function App() {
                   key={group.groupKey}
                   group={group}
                   qty={cartQtyById.get(group.variants[0].id) ?? 0}
-                  onQtyChange={setItemQty}
+                  onQtyAdjust={adjustItemQty}
                   isFavorite={favorites.has(group.groupKey)}
                   onToggleFavorite={() => toggleFavorite(group.groupKey)}
                 />
