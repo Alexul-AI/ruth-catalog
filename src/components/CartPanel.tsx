@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { buildWhatsAppUrl, sendWhatsAppOrder } from '../utils/whatsapp'
 import { loadLastOrder, saveLastOrder } from '../utils/lastOrder'
 import { useOrderDetails } from '../hooks/useOrderDetails'
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
 import type { CartItem } from '../types'
 import styles from './CartPanel.module.css'
 
@@ -22,16 +23,7 @@ export default function CartPanel({ cart, onClose, onUpdateQty, onRemove, onRest
   const [fallbackUrl, setFallbackUrl] = useState<string | null>(null)
   const [lastOrder, setLastOrder] = useState(loadLastOrder)
 
-  // With no lock, a swipe inside the panel that reaches its own scroll edge
-  // chains into the (now much taller, 71-card) catalog page behind it - the
-  // panel doesn't visibly change, so it reads as "scrolling into nothing".
-  useEffect(() => {
-    const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-    return () => {
-      document.body.style.overflow = previousOverflow
-    }
-  }, [])
+  useBodyScrollLock()
 
   const totalItems = cart.reduce((s, i) => s + i.qty, 0)
   const formValid = details.customerName.trim() !== '' && cart.length > 0
