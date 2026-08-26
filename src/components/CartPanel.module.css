@@ -160,6 +160,21 @@
   font-weight: 600;
 }
 
+/* ── Summary line (form step) ── */
+.summaryLine {
+  font-size: 11px;
+  color: var(--muted);
+  padding: 0.25rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ── Bottom bar ── */
+.bottom {
+  padding: 0.75rem 1.1rem;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
 .summary {
   font-size: 12px;
   color: var(--muted);
