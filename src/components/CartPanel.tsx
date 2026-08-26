@@ -38,9 +38,7 @@ export default function CartPanel({ cart, onClose, onUpdateQty, onRemove, onRest
     const opened = sendWhatsAppOrder(cart, details)
     saveLastOrder(cart)
     setLastOrder(cart)
-    if (!opened) {
-      setFallbackUrl(buildWhatsAppUrl(cart, details))
-    }
+    setFallbackUrl(opened ? null : buildWhatsAppUrl(cart, details))
     // Opening WhatsApp (or even showing a fallback link) is not the same as
     // the customer actually pressing send inside WhatsApp - we have no way
     // to observe that. So the cart stays intact here; only an explicit
@@ -62,7 +60,7 @@ export default function CartPanel({ cart, onClose, onUpdateQty, onRemove, onRest
           <h2>
             {step === 'list' && '🛒 סיכום הזמנה'}
             {step === 'form' && '📋 סיכום הזמנה'}
-            {step === 'whatsappOpened' && '📱 WhatsApp נפתח'}
+            {step === 'whatsappOpened' && (fallbackUrl ? '📱 לא נפתח אוטומטית' : '📱 WhatsApp נפתח')}
           </h2>
           <button className={styles.closeBtn} onClick={onClose} aria-label="סגור">✕</button>
         </div>
@@ -71,12 +69,21 @@ export default function CartPanel({ cart, onClose, onUpdateQty, onRemove, onRest
         {step === 'whatsappOpened' && (
           <div className={styles.empty}>
             <div className={styles.emptyIcon}>📱</div>
-            <p className={styles.emptyTitle}>WhatsApp נפתח</p>
-            <p className={styles.emptySub}>
-              {fallbackUrl
-                ? 'אם WhatsApp לא נפתח אוטומטית אצלכם, לחצו על הקישור למטה כדי לפתוח את ההודעה.'
-                : 'יש לבדוק את ההודעה וללחוץ על שליחה ב-WhatsApp.'}
-            </p>
+            {fallbackUrl ? (
+              <>
+                <p className={styles.emptyTitle}>לא הצלחנו לפתוח את WhatsApp אוטומטית</p>
+                <p className={styles.emptySub}>
+                  ההזמנה נשמרה.
+                  <br />
+                  לחצו על הכפתור כדי לפתוח את WhatsApp ידנית.
+                </p>
+              </>
+            ) : (
+              <>
+                <p className={styles.emptyTitle}>WhatsApp נפתח</p>
+                <p className={styles.emptySub}>יש לבדוק את ההודעה וללחוץ על שליחה ב-WhatsApp.</p>
+              </>
+            )}
             <div className={styles.sentActions}>
               {fallbackUrl && (
                 <a
@@ -85,7 +92,7 @@ export default function CartPanel({ cart, onClose, onUpdateQty, onRemove, onRest
                   target="_blank"
                   rel="noreferrer"
                 >
-                  פתיחת WhatsApp
+                  פתיחה ידנית ב-WhatsApp
                 </a>
               )}
               <button className={styles.backBtn} onClick={() => setStep('list')}>
